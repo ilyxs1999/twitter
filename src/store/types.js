@@ -1,0 +1,12 @@
+export const SIGN_UP = 'SIGN_UP';
+export const SIGN_IN = 'SIGN_IN';
+export const GET_USER = 'GET_USER';
+export const SEND_POST = 'SEND_POST';
+export const LIKE_POST = 'LIKE_POST';
+export const SET_AVATAR = 'SET_AVATAR';
+export const SET_USERNAME = 'SET_USERNAME';
+export const LOG_OUT = 'LOG_OUT';
+export const CHANGE_USERNAME = 'CHANGE_USERNAME';
+export const CHANGE_PASSWORD = 'CHANGE_PASSWORD';
+export const CHANGE_EMAIL = 'CHANGE_EMAIL';
+export const ADD_COMMENT = 'ADD_COMMENT';

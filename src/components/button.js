@@ -21,16 +21,17 @@ export default class Button extends PureComponent {
   }
 
   render() {
-    const { title, style, titleStyle, titleWeight, } = this.props;
+    const { title, style, titleStyle, titleWeight,  } = this.props;
 
     return (
       <Touchable
+
         style={[styles.container, style,]}
         onPress={this.props.onPress}
       >
         {
           title ?
-            <Text fontWeight={titleWeight} style={[styles.text, title && size && icon ? styles.margin : null, titleStyle,]}>
+            <Text fontWeight={titleWeight} style={[styles.text , titleStyle,]}>
               {this.props.title}
             </Text>
             :

@@ -1,56 +1,69 @@
+import React, {PureComponent} from 'react';
+import {View, Button} from '../../components';
+import {Input} from 'react-native-elements';
+import {signUp} from '../../store/actions';
+import {connect} from 'react-redux';
+import NavigationService from '../../services/NavigationService';
+import {styles} from './styles'
 
+class SignUp extends PureComponent {
+  state = {
+    username: '',
+    email: '',
+    password: '',
+  };
+  
+  handleClick = () => {
+    this.props.onSignUp(
+      this.state.username.trim(),
+      this.state.email.trim(),
+      this.state.password,
+    );
+    NavigationService.navigate('Auth', {});
+  };
 
-import React, { PureComponent } from 'react';
-import { View,Text,Touchable } from '../../components';
-import {Button} from 'react-native-elements'
-import {Image, StyleSheet} from 'react-native'
-import * as COLORS from "../../../src/constants/colors"
-
-
-
-export default class SignUp extends PureComponent {
-    render() {
-      return (
-       
-        <View style={styles.container}>
-           <Image
-          style={styles.logo}
-          source={{uri : "https://upload.wikimedia.org/wikipedia/ru/thumb/9/9f/Twitter_bird_logo_2012.svg/1024px-Twitter_bird_logo_2012.svg.png"}}
+  render() {
+    return (
+      <View style={styles.container}>
+        <Input
+          style={styles.input}
+          onChangeText={username => this.setState({username})}
+          value={this.state.username}
+          placeholder={'Username'}
         />
-        <View style={styles.buttonGroup}>
-          <Button
-          style={styles.button}
-          title="Sign in"
-          />
-          <Button
-          style={styles.button}
-          title="Sign up"
+        <Input
+          style={styles.input}
+          onChangeText={email => this.setState({email})}
+          value={this.state.email}
+          placeholder={'Email'}
         />
-       </View>
-        </View>
-     
-        
-      );
-    }
+        <Input
+          style={styles.input}
+          onChangeText={password => this.setState({password})}
+          secureTextEntry={true}
+          value={this.state.password}
+          placeholder={'Password'}
+        />
+        <Button
+          onPress={this.handleClick}
+          style={styles.button}
+          title="Sign Up"
+        />
+      </View>
+    );
   }
-  const styles = StyleSheet.create({
-    container : {
-      flex : 1, 
-      justifyContent : "center",
-      alignItems : "center"
-    },
-    logo: {
-      height : 300,
-      width : 300,
-      padding : 10,
-      margin : 10,
-     
-    },
-    buttonGroup : {
-     width : 300,
-    },
-    button :{
-      padding : 10
-    }
-    
-  });
+}
+
+const mapStateToProps = state => {
+  return {user: state.users.user, users: state.users.users};
+};
+
+const mapDispatchToProps = dispatch => ({
+  onSignUp: (username, email, password) => {
+    dispatch(signUp(username, email, password));
+  },
+});
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(SignUp);

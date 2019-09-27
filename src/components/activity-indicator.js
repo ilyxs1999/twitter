@@ -1,6 +1,6 @@
-import React, { PureComponent } from 'react';
+import React, {PureComponent} from 'react';
 import PropTypes from 'prop-types';
-import { ActivityIndicator, StyleSheet } from 'react-native';
+import {ActivityIndicator, StyleSheet} from 'react-native';
 
 export default class AI extends PureComponent {
   static propTypes = {
@@ -15,8 +15,14 @@ export default class AI extends PureComponent {
   };
 
   render() {
-    const { size, style, color } = this.props;
-    return <ActivityIndicator size={size} style={[styles.root, style]} color={color} />;
+    const {size, style, color} = this.props;
+    return (
+      <ActivityIndicator
+        size={size}
+        style={[styles.root, style]}
+        color={color}
+      />
+    );
   }
 }
 

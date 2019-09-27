@@ -1,19 +1,33 @@
-import { createAppContainer } from 'react-navigation';
-import { createStackNavigator } from 'react-navigation-stack';
+import {createAppContainer, createSwitchNavigator} from 'react-navigation';
+import {createStackNavigator} from 'react-navigation-stack';
 import App from '../index';
-import SignIn from '../signIn'
-import SignUp from '../signUp'
+import SignIn from '../signIn';
+import SignUp from '../signUp';
+import Posts from '../posts';
+import Auth from '../auth';
+import Account from '../account';
+import Settings from '../settings';
+import Profile from '../profile';
+import Comments from '../comments';
 
+const AccountNavigator = createStackNavigator({
+  Posts,
+  Account,
+  Settings,
+  Profile,
+  Comments,
+});
 
-const AppNavigator = createStackNavigator(
-   { 
-       App:  App,
-       SignIn : SignIn,
-       SignUp : SignUp
-   },
-    {
-        initialRouteName : "App"
-    }
-);
+const AuthNavigator = createStackNavigator({
+  App,
+  Auth,
+  SignIn,
+  SignUp,
+});
+
+const AppNavigator = createSwitchNavigator({
+  Auth: AuthNavigator,
+  App: AccountNavigator,
+});
+
 export default createAppContainer(AppNavigator);
- 

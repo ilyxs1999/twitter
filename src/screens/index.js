@@ -1,61 +1,22 @@
+import React, {PureComponent} from 'react';
+import Auth from '../screens/auth';
+import {View} from 'react-native';
+import Posts from '../screens/posts';
+import {connect} from 'react-redux';
+import NavigationService from '../services/NavigationService';
 
-import React, { PureComponent } from 'react';
-import { View,Text,Touchable } from '../components';
-import {Button} from 'react-native-elements'
-import {Image, StyleSheet} from 'react-native'
-import * as COLORS from "../../src/constants/colors"
-import {
-  NavigationParams,
-  NavigationScreenProp,
-  NavigationState,
-} from 'react-navigation';
-
-
-
-export default class App extends PureComponent {
-    render() {
-      return (
-       
-        <View style={styles.container}>
-           <Image
-          style={styles.logo}
-          source={{uri : "https://upload.wikimedia.org/wikipedia/ru/thumb/9/9f/Twitter_bird_logo_2012.svg/1024px-Twitter_bird_logo_2012.svg.png"}}
-        />
-        <View style={styles.buttonGroup}>
-          <Button
-          style={styles.button}
-          title="Sign in"
-          />
-          <Button
-          
-          style={styles.button}
-          title="Sign up"
-        />
-       </View>
-        </View>
-     
-        
-      );
-    }
+class App extends PureComponent {
+  componentDidMount() {
+    if (this.props.loginIn) this.props.navigation.navigate('Posts');
+    else this.props.navigation.navigate('Auth');
   }
-  const styles = StyleSheet.create({
-    container : {
-      flex : 1, 
-      justifyContent : "center",
-      alignItems : "center"
-    },
-    logo: {
-      height : 300,
-      width : 300,
-      padding : 10,
-      margin : 10,
-     
-    },
-    buttonGroup : {
-     width : 300,
-    },
-    button :{
-      padding : 10
-    }
-    
-  });
+
+  render() {
+    return <View />;
+  }
+}
+const mapStateToProps = state => ({
+  loginIn: state.users.loginIn,
+});
+
+export default connect(mapStateToProps)(App);
