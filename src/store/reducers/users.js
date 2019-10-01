@@ -1,5 +1,6 @@
 import * as types from '../types';
 import * as IMAGES from '../../constants/img';
+
 const initialState = {
   loginIn: false,
   users: [],
@@ -11,25 +12,17 @@ const initialState = {
     avatarUri: null,
   },
 };
+
 export default function users(state = initialState, action) {
-  let list, user, newUsers;
   switch (action.type) {
-    case types.SIGN_UP:
-      const newId = state.users.length + 1;
-      const newUser = {
-        id: newId,
-        username: action.username,
-        email: action.email,
-        password: action.password,
-        avatarUri: IMAGES.AVATAR,
-      };
+    case types.SIGN_UP: {
       return {
         ...state,
-        user: newUser,
-        users: state.users.concat(newUser),
+        user: action.newUser,
+        users: state.users.concat(action.newUser),
       };
-
-    case types.SIGN_IN:
+    }
+    case types.SIGN_IN: {
       const email = action.email;
       const password = action.password;
       const users = state.users;
@@ -37,13 +30,14 @@ export default function users(state = initialState, action) {
         if (users[i].email == email && users[i].password == password)
           return {...state, user: users[i], loginIn: true};
       }
-    case types.SET_AVATAR:
-      list = state.users;
-      user = {
+    }
+    case types.SET_AVATAR: {
+      let list = state.users;
+      let user = {
         ...state.user,
         avatarUri: action.avatarUri,
       };
-      newUsers = list.map(function(user) {
+      let newUsers = list.map(function(user) {
         if (user.email == state.user.email) user.avatarUri = action.avatarUri;
         return user;
       });
@@ -52,18 +46,20 @@ export default function users(state = initialState, action) {
         users: newUsers,
         user: user,
       };
-    case types.LOG_OUT:
+    }
+    case types.LOG_OUT: {
       return {
         ...state,
         loginIn: false,
       };
-    case types.CHANGE_USERNAME:
-      list = state.users;
-      user = {
+    }
+    case types.CHANGE_USERNAME: {
+      let list = state.users;
+      let user = {
         ...state.user,
         username: action.username,
       };
-      newUsers = list.map(function(user) {
+      let newUsers = list.map(function(user) {
         if (user.email == state.user.email) user.username = action.username;
         return user;
       });
@@ -72,13 +68,14 @@ export default function users(state = initialState, action) {
         users: newUsers,
         user: user,
       };
-    case types.CHANGE_PASSWORD:
-      list = state.users;
-      user = {
+    }
+    case types.CHANGE_PASSWORD: {
+      let list = state.users;
+      let user = {
         ...state.user,
         password: action.password,
       };
-      newUsers = list.map(function(user) {
+      let newUsers = list.map(function(user) {
         if (user.email == state.user.email) user.password = action.password;
         return user;
       });
@@ -87,13 +84,14 @@ export default function users(state = initialState, action) {
         users: newUsers,
         user: user,
       };
-    case types.CHANGE_EMAIL:
-      list = state.users;
-      user = {
+    }
+    case types.CHANGE_EMAIL: {
+      let list = state.users;
+      let user = {
         ...state.user,
         email: action.email,
       };
-      newUsers = list.map(function(user) {
+      let newUsers = list.map(function(user) {
         if (user.email == state.user.email) user.email = action.email;
         return user;
       });
@@ -102,6 +100,7 @@ export default function users(state = initialState, action) {
         users: newUsers,
         user: user,
       };
+    }
 
     default:
       return state;

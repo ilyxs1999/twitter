@@ -5,6 +5,11 @@ import {connect} from 'react-redux';
 import {ListItem, Avatar} from 'react-native-elements';
 import NavigationService from '../../services/NavigationService';
 import {styles} from './styles';
+import * as values from '../../constants/values';
+import {get} from 'lodash';
+import {AVATAR} from '../../constants/img'
+import {DEFAULT_USERNAME, DEFAULT_EMAIL} from '../../constants/values'
+
 
 class Profile extends PureComponent {
   static navigationOptions = {
@@ -12,7 +17,7 @@ class Profile extends PureComponent {
       <Touchable
         onPress={() => NavigationService.pop(1)}
         style={styles.backButton}>
-        <Text style={styles.backText}>{'<  Back'}</Text>
+        <Text style={styles.backText}>{values.BACK_BUTTON}</Text>
       </Touchable>
     ),
   };
@@ -24,23 +29,17 @@ class Profile extends PureComponent {
           containerStyle={styles.avatar}
           size={200}
           rounded
-          source={{uri: user.avatarUri}}
+          source={{uri: get(user,'avatarUri',AVATAR)}}
         />
-        <ListItem title={user.username} bottomDivider />
-        <ListItem title={user.email} bottomDivider />
+        <ListItem title={get(user,'username',DEFAULT_USERNAME)} bottomDivider />
+        <ListItem title={get(user,'email',DEFAULT_EMAIL)} bottomDivider />
       </View>
     );
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    user: state.users.user,
-  };
-};
+const mapStateToProps = state => ({
+  user: state.users.user,
+});
 
-const mapDispatchToProps = dispatch => ({});
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Profile);
+export default connect(mapStateToProps)(Profile);

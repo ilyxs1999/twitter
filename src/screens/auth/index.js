@@ -2,11 +2,23 @@ import React, {PureComponent} from 'react';
 import {View, Button} from '../../components';
 import NavigationService from '../../services/NavigationService';
 import {Image, StyleSheet} from 'react-native';
-import {styles} from './styles'
-export default class Auth extends PureComponent {
+import {styles} from './styles';
+import {connect} from 'react-redux';
+import * as image from '../../constants/img'
+
+class Auth extends PureComponent {
   static navigationOptions = {
     header: null,
   };
+
+  componentDidMount() {
+    if (this.props.loginIn) this.props.navigation.navigate('Posts');
+  }
+
+  navigate = (name) => () => {
+    NavigationService.navigate(name, {})
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -14,27 +26,27 @@ export default class Auth extends PureComponent {
           style={styles.logo}
           source={{
             uri:
-              'https://upload.wikimedia.org/wikipedia/ru/thumb/9/9f/Twitter_bird_logo_2012.svg/1024px-Twitter_bird_logo_2012.svg.png',
+              image.LOGO,
           }}
         />
         <View>
           <Button
-            onPress={() => {
-              NavigationService.navigate('SignIn', {});
-            }}
+            onPress={this.navigate("SignIn")}
             style={styles.button}
             title="Sign in"
           />
           <Button
-            onPress={() => {
-              NavigationService.navigate('SignUp', {});
-            }}
+            onPress={this.navigate("SignUp")}
             style={styles.button}
             title="Sign up"
           />
-          
         </View>
       </View>
     );
   }
 }
+const mapStateToProps = state => ({
+  loginIn: state.users.loginIn,
+});
+
+export default connect(mapStateToProps)(Auth);

@@ -1,16 +1,17 @@
 import {StyleSheet} from 'react-native';
 
 export const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    flex: 1,
+  },
+  
   backButton: {
     padding: 10,
   },
   backText: {
     fontSize: 18,
-  },
-  container: {
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    flex: 1,
   },
   input: {
     height: 80,

@@ -8,4 +8,20 @@ export const styles = StyleSheet.create({
     padding: 20,
     alignSelf: 'center',
   },
+  backButtonContainer: {
+    padding: 10,
+  },
+  backButtonText: {
+    fontSize: 18,
+  },
+  userInfo: {
+    padding: 20,
+  },
+  textInfo: {
+    fontSize: 18,
+  },
+  textContainer: {
+    flexDirection: 'row',
+    alignContent: 'space-between',
+  },
 });

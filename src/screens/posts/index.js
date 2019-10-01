@@ -1,15 +1,20 @@
 import React from 'react';
-import {View, Touchable} from '../../components';
+import {View, Touchable, Text} from '../../components';
 import {Button} from '../../components';
-import {ScrollView, TextInput, StyleSheet, SafeAreaView} from 'react-native';
+import {ScrollView, TextInput, Image, SafeAreaView} from 'react-native';
 import * as COLORS from '../../constants/colors';
-import {Icon, Card} from 'react-native-elements';
+import {Icon, Card, Overlay} from 'react-native-elements';
 import NavigationService from '../../services/NavigationService';
 import {connect} from 'react-redux';
 import {sendPost, likePost} from '../../store/actions';
 import ImagePicker from 'react-native-image-picker';
 import {Post} from '../../components/post';
 import {styles} from './styles';
+import * as values from '../../constants/values';
+import * as lodash from 'lodash';
+import * as image from '../../constants/img';
+import moment from 'moment'
+
 class Posts extends React.Component {
   constructor(props) {
     super(props);
@@ -17,22 +22,12 @@ class Posts extends React.Component {
       postText: '',
       posts: props.posts,
       image: null,
+      isVisible: false,
+      fullScreenImage : null
     };
     this.scrollView = null;
   }
-  chooseFile = () => {
-    var options = {
-      noData: true,
-    };
-    ImagePicker.launchImageLibrary(options, response => {
-      if (response.uri) {
-        this.setState({image: response.uri});
-      }
-    });
-  };
-  navigation = screen => () => {
-    NavigationService.navigate(screen);
-  };
+
   static navigationOptions = {
     headerTitle: (
       <Icon
@@ -50,6 +45,25 @@ class Posts extends React.Component {
     ),
   };
 
+  chooseFile = () => () => {
+    let options = {
+      noData: true,
+    };
+    ImagePicker.launchImageLibrary(options, response => {
+      if (response.uri) {
+        this.setState({image: response.uri});
+      }
+    });
+  };
+
+  openImage = (image) =>() => {
+    this.setState({fullScreenImage : image,isVisible: true});
+  };
+
+  closeImage = () => {
+    this.setState({fullScreenImage : null,isVisible: false});
+  };
+
   static getDerivedStateFromProps(props, state) {
     if (state.posts.length < props.posts.length) {
       const posts = props.posts;
@@ -58,23 +72,23 @@ class Posts extends React.Component {
     return null;
   }
 
-  getPosts = () => {
-    return this.props.posts.filter(
-      post => post.user.email == this.props.user.email,
-    );
-  };
   sendPost = () => {
-    let postText = '';
-    const image = null;
     this.props.sendPost(this.props.user, this.state.postText, this.state.image);
-    this.setState({postText, image});
+
+    this.setState({postText: '', image: null});
   };
+
   scrollToEnd = () => {
     this.scrollView.scrollToEnd();
   };
+
   getTime = i => {
     const date = new Date(this.state.posts[i].time);
-    return date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+    return `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+  };
+
+  navigate = (name, params) => () => {
+    NavigationService.navigate(name, params);
   };
 
   render() {
@@ -88,67 +102,71 @@ class Posts extends React.Component {
             onContentSizeChange={(contentWidth, contentHeight) => {
               this.scrollView.scrollToEnd({animated: true});
             }}>
-            {this.state.posts.map((post, i) => {
-              return (
-                <Touchable
-                  onPress={() =>
-                    NavigationService.navigate('Comments', {post: post})
-                  }>
-                  <Post
-                    avatar={post.user.avatarUri}
-                    avatarOnPress={() =>
-                      NavigationService.navigate('Profile', {user: post.user})
-                    }
-                    username={post.user.username}
-                    postText={post.postText}
-                    postImage={post.image}
-                    postTime={this.getTime(i)}
-                  />
-                </Touchable>
-              );
-            })}
+            {this.state.posts.map((post, index) => (
+              <Touchable
+                key={index}
+                onPress={this.navigate('Comments', {post: post})}>
+                <Post
+                  avatar={lodash.get(post, 'user.avatarUri', image.AVATAR)}
+                  avatarOnPress={this.navigate('Profile', {user: post.user})}
+                  username={lodash.get(
+                    post,
+                    'user.username',
+                    values.DEFAULT_USERNAME,
+                  )}
+                  postImageOnPress={this.openImage(post.image)}
+                  postText={post.postText}
+                  postImage={post.image}
+                  postTime={`${moment(post.time).format(values.DATE_FORMAT)}`}
+                />
+              </Touchable>
+            ))}
           </ScrollView>
         </Card>
         <TextInput
           style={styles.input}
           value={this.state.postText}
           onChangeText={postText => this.setState({postText})}
-          placeholder={'write your post'}
+          placeholder={values.WRITE_YOUR_POST}
           maxLength={240}
           multiline={true}
           scrollEnabled={true}
         />
         <View style={styles.buttonGroup}>
           <Button
-            onPress={() => this.sendPost()}
-            title={'send'}
+            onPress={this.sendPost}
+            title={values.SEND}
             style={styles.sendButton}
           />
           <Button
-            onPress={() => this.chooseFile()}
-            title={'load image'}
+            onPress={this.chooseFile()}
+            title={values.LOAD_IMAGE}
             style={styles.chooseButton}
           />
         </View>
+        <Overlay
+          fullScreen={true}
+          isVisible={this.state.isVisible}
+          onBackdropPress={() => this.setState({isVisible: false})}>
+            <SafeAreaView style={styles.overlay}>
+              <Image style={styles.fullScreenImage} source={{uri : this.state.fullScreenImage}}/>
+          <Button onPress={this.closeImage} title={'close'} />
+          </SafeAreaView>
+        </Overlay>
       </SafeAreaView>
     );
   }
 }
-const mapStateToProps = state => {
-  return {
-    like: state.posts.like,
-    user: state.users.user,
-    posts: state.posts.posts,
-  };
-};
+const mapStateToProps = state => ({
+  like: state.posts.like,
+  user: state.users.user,
+  posts: state.posts.posts,
+});
 
 const mapDispatchToProps = dispatch => ({
-  sendPost: (user, postText, image) => {
-    dispatch(sendPost(user, postText, image));
-  },
-  likePost: (user, postText) => {
-    dispatch(likePost(user, postText));
-  },
+  sendPost: (user, postText, image) =>
+    dispatch(sendPost(user, postText, image)),
+  likePost: (user, postText) => dispatch(likePost(user, postText)),
 });
 
 export default connect(

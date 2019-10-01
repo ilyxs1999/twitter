@@ -1,7 +1,8 @@
 module.exports = {
     "plugins": [
       "react",
-      "react-native"
+      "react-native",
+      "airbnb",
     ],
     "parserOptions": {
         "ecmaFeatures": {
@@ -11,7 +12,7 @@ module.exports = {
     "env": {
         "react-native/react-native": true
       },
-      settings: {
+      "settings": {
         'react-native/style-sheet-object-names': ['EStyleSheet', 'OtherStyleSheet', 'PStyleSheet']
     },
     "rules": {

@@ -2,13 +2,13 @@ import React from 'react';
 import {Avatar, CheckBox, Icon} from 'react-native-elements';
 import {View, Image} from 'react-native';
 import {Text, Touchable} from '../components';
+import {styles} from './styles';
 
 export function Comment(props) {
   return (
-    <View
-      style={{borderBottomColor: '#6a717d', borderBottomWidth: 1, padding: 5}}>
-      <View style={{flexDirection: 'row'}}>
-        <View style={{flex: 1, alignItems: 'center', margin: 10}}>
+    <View style={styles.commentContainer}>
+      <View style={styles.commentContainerDirection}>
+        <View style={styles.commentAvatar}>
           <Avatar
             size="small"
             rounded
@@ -16,16 +16,16 @@ export function Comment(props) {
             onPress={props.avatarOnPress}
           />
         </View>
-        <View style={{flex: 6, justifyContent: 'space-between'}}>
+        <View style={styles.commentTextContainer}>
           <Touchable onPress={props.avatarOnPress}>
-            <Text style={{color: 'blue'}}>{props.username}</Text>
+            <Text style={styles.commentUsernameText}>{props.username}</Text>
           </Touchable>
           <Text>{props.commentText}</Text>
           <Text>
             `
             {props.commentImage && (
               <Image
-                style={{width: 200, height: 200}}
+                style={styles.image}
                 source={{uri: props.commentImage}}
               />
             )}

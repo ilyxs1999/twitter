@@ -1,4 +1,5 @@
 import {StyleSheet} from 'react-native';
+
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -11,4 +12,7 @@ export const styles = StyleSheet.create({
   button: {
     margin: 10,
   },
+  errorText : {
+    color : "red"
+  }
 });

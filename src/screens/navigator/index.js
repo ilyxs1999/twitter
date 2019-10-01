@@ -1,6 +1,5 @@
 import {createAppContainer, createSwitchNavigator} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
-import App from '../index';
 import SignIn from '../signIn';
 import SignUp from '../signUp';
 import Posts from '../posts';
@@ -19,7 +18,6 @@ const AccountNavigator = createStackNavigator({
 });
 
 const AuthNavigator = createStackNavigator({
-  App,
   Auth,
   SignIn,
   SignUp,

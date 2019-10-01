@@ -1,25 +1,23 @@
 import React from 'react';
 import {Overlay, Input} from 'react-native-elements';
 import {View} from 'react-native';
-
+import {styles} from './styles';
 import {Button} from '../components';
 
 export function Alert(props) {
   return (
-    <Overlay
-      isVisible={props.isVisible}
-      overlayStyle={{height: 200, width: 300, alignItems: 'center'}}>
+    <Overlay isVisible={props.isVisible} overlayStyle={styles.overlayContainer}>
       <Input value={props.value} onChangeText={props.onChangeText} />
-      <View style={{flexDirection: 'row'}}>
+      <View style={styles.overlayDirection}>
         <Button
           onPress={props.saveFunc}
           title={'save'}
-          style={{margin: 20, flex: 1}}
+          style={styles.overlayButton}
         />
         <Button
           onPress={props.back}
           title={'back'}
-          style={{margin: 20, flex: 1}}
+          style={styles.overlayButton}
         />
       </View>
     </Overlay>

@@ -28,4 +28,12 @@ export const styles = StyleSheet.create({
     height: 40,
     flexDirection: 'row',
   },
+  overlay : {
+    flex : 1,
+    alignContent : "space-between"
+  },
+  fullScreenImage : {
+    flex : 1,
+    resizeMode : "contain"
+  }
 });

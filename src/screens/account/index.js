@@ -1,10 +1,11 @@
 import React, {PureComponent} from 'react';
-import {View, Text, Touchable} from '../../components';
+import {View, Text, Touchable, Button} from '../../components';
 import {Alert} from '../../components/overlay';
-import {Avatar, ListItem} from 'react-native-elements';
+import {Avatar, Icon} from 'react-native-elements';
 import ImagePicker from 'react-native-image-picker';
 import {connect} from 'react-redux';
-import {styles} from './styles'
+import {styles} from './styles';
+import * as values from '../../constants/values';
 import {
   setAvatar,
   logOut,
@@ -15,12 +16,15 @@ import {
 import NavigationService from '../../services/NavigationService';
 
 class Account extends PureComponent {
-  state = {
-    type: null,
-    text: '',
-    avatarUri: this.props.user.avatarUri,
-    overlayVisible: false,
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      type: null,
+      text: '',
+      avatarUri: this.props.user.avatarUri,
+      overlayVisible: false,
+    };
+  }
 
   chooseFile = () => {
     var options = {
@@ -29,20 +33,25 @@ class Account extends PureComponent {
     ImagePicker.launchImageLibrary(options, response => {
       if (response.uri) {
         this.props.setAvatar(response.uri);
+
         this.setState({avatarUri: response.uri});
       }
     });
   };
-  logOut = () => {
+
+  logOut = () => () => {
     this.props.logOut();
+
     NavigationService.navigate('Auth');
-    NavigationService.reset('Auth');
   };
-  handleClick = type => {
-    this.state.type = type;
+
+  handleClick = type => () => {
+    this.setState({type: type});
+
     this.setState({overlayVisible: true});
   };
-  save = () => {
+
+  save = () => () => {
     switch (this.state.type) {
       case 'PASSWORD':
         this.props.changePassword(this.state.text);
@@ -55,42 +64,33 @@ class Account extends PureComponent {
         break;
     }
     this.clean();
-    this.setState({overlayVisible: false});
   };
-  close = () => {
+
+  close = () => () => {
     this.clean();
-    this.setState({overlayVisible: false});
   };
+
   clean = () => {
     this.setState({text: ''});
+
+    this.setState({overlayVisible: false});
+  };
+
+  handleChangeText = () => text => {
+    this.setState({text});
   };
 
   static navigationOptions = {
     headerLeft: (
       <Touchable
         onPress={() => NavigationService.reset('Posts')}
-        style={{padding: 10}}>
-        <Text style={{fontSize: 18}}>{'<  Back'}</Text>
+        style={styles.backButtonContainer}>
+        <Text style={styles.backButtonText}>{values.BACK_BUTTON}</Text>
       </Touchable>
     ),
   };
 
   render() {
-    list = [
-      {
-        title: 'username: ' + this.props.user.username,
-        type: 'USERNAME',
-      },
-      {
-        title: 'email: ' + this.props.user.email,
-        type: 'EMAIL',
-      },
-      {
-        title: 'Change password',
-        type: 'PASSWORD',
-      },
-    ];
-
     return (
       <View style={styles.container}>
         <Avatar
@@ -101,53 +101,54 @@ class Account extends PureComponent {
           onPress={this.chooseFile}
           showEditButton
         />
-
-        {list.map((item, i) => (
-          <ListItem
-            key={i}
-            title={item.title}
-            bottomDivider
-            onPress={() => this.handleClick(item.type)}
-          />
-        ))}
-        <ListItem
-          title={'Log out'}
-          bottomDivider
-          onPress={() => this.logOut()}
-        />
+        <View style={styles.userInfo}>
+          <Touchable
+            style={styles.textContainer}
+            onPress={this.handleClick(values.TYPE_USERNAME)}>
+            <Text
+              style={
+                styles.textInfo
+              }>{`${values.USERNAME}: ${this.props.user.username}`}</Text>
+            <Icon name="create" />
+          </Touchable>
+          <Touchable
+            style={styles.textContainer}
+            onPress={this.handleClick(values.TYPE_EMAIL)}>
+            <Text
+              style={
+                styles.textInfo
+              }>{`${values.EMAIL}: ${this.props.user.email}`}</Text>
+            <Icon name="create" />
+          </Touchable>
+          <Touchable
+            style={styles.textContainer}
+            onPress={this.handleClick(values.TYPE_PASSWORD)}>
+            <Text style={styles.textInfo}>{`${values.CHANGE_PASSWORD}`}</Text>
+            <Icon name="create" />
+          </Touchable>
+        </View>
+        <Button title={values.LOG_OUT} onPress={this.logOut()} />
         <Alert
           isVisible={this.state.overlayVisible}
           value={this.state.text}
-          onChangeText={text => this.setState({text})}
-          saveFunc={() => this.save()}
-          back={() => this.close()}
+          onChangeText={this.handleChangeText()}
+          saveFunc={this.save()}
+          back={this.close()}
         />
       </View>
     );
   }
 }
-const mapStateToProps = state => {
-  return {
-    user: state.users.user,
-  };
-};
+const mapStateToProps = state => ({
+  user: state.users.user,
+});
 
 const mapDispatchToProps = dispatch => ({
-  setAvatar: avatarUri => {
-    dispatch(setAvatar(avatarUri));
-  },
-  logOut: () => {
-    dispatch(logOut());
-  },
-  changeUsername: username => {
-    dispatch(changeUsername(username));
-  },
-  changePassword: password => {
-    dispatch(changePassword(password));
-  },
-  changeEmail: eamil => {
-    dispatch(changeEmail(eamil));
-  },
+  setAvatar: avatarUri => dispatch(setAvatar(avatarUri)),
+  logOut: () => dispatch(logOut()),
+  changeUsername: username => dispatch(changeUsername(username)),
+  changePassword: password => dispatch(changePassword(password)),
+  changeEmail: email => dispatch(changeEmail(email)),
 });
 
 export default connect(

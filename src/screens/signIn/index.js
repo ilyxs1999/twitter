@@ -5,8 +5,10 @@ import {signIn} from '../../store/actions';
 import {connect} from 'react-redux';
 import NavigationService from '../../services/NavigationService';
 import {styles} from './styles'
+import * as values from  '../../constants/values'
 
 class SignIn extends PureComponent {
+ 
   state = {
     email: '',
     password: '',
@@ -15,49 +17,53 @@ class SignIn extends PureComponent {
   handleClick = () => {
     this.props.onSignIn(this.state.email.trim(), this.state.password);
   };
+
   static getDerivedStateFromProps(props) {
-    if (props.loginIn != undefined) {
-      if (props.loginIn != false) NavigationService.navigate('Posts');
-    }
+    if (props.loginIn != false) NavigationService.navigate('Posts');
     return null
   }
 
+  handleChangePassword = () => (password) => {
+    this.setState({password})
+  }
+
+  handleChangeEmail = () => (email) => {
+    this.setState({email})
+  }
+  
   render() {
     return (
       <View style={styles.container}>
         <Input
           style={styles.input}
-          onChangeText={email => this.setState({email})}
+          onChangeText={this.handleChangeEmail()}
           value={this.state.email}
-          placeholder={'Email'}
+          placeholder={values.EMAIL}
         />
         <Input
           style={styles.input}
-          onChangeText={password => this.setState({password})}
+          onChangeText={this.handleChangePassword()}
           secureTextEntry={true}
           value={this.state.password}
-          placeholder={'Password'}
+          placeholder={values.PASSWORD}
         />
         <Button
           onPress={this.handleClick}
           style={styles.button}
-          title="Sign In"
+          title={values.SIGN_IN}
         />
       </View>
     );
   }
 }
-const mapStateToProps = state => {
-  return {
+const mapStateToProps = state => ({
     loginIn: state.users.loginIn,
     user: state.users.user,
-  };
-};
+});
 
 const mapDispatchToProps = dispatch => ({
-  onSignIn: (email, password) => {
-    dispatch(signIn(email, password));
-  },
+  onSignIn: (email, password) => 
+    dispatch(signIn(email, password)),
 });
 
 

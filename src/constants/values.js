@@ -1,0 +1,17 @@
+export const BACK_BUTTON = '<  Back';
+export const USERNAME = 'Username';
+export const EMAIL = 'Email';
+export const CHANGE_PASSWORD = "Change password";
+export const TYPE_USERNAME = "USERNAME"
+export const TYPE_EMAIL = "EMAIL"
+export const TYPE_PASSWORD = "PASSWORD"
+export const LOG_OUT = "Log out"
+export const WRITE_YOUR_POST = "write your post"
+export const SEND = "send"
+export const LOAD_IMAGE = 'load image'
+export const PASSWORD = "Password"
+export const SIGN_IN = "Sign In"
+export const SING_UP = 'Sign Up'
+export const DEFAULT_USERNAME = 'Error, username not found'
+export const DEFAULT_EMAIL = 'Error, email not found'
+export const DATE_FORMAT = "HH:mm:ss, YYYY-MM-DD"

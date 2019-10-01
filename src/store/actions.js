@@ -1,11 +1,21 @@
 import * as types from './types';
+import ids from 'shortid'
+import * as IMAGES from '../constants/img';
+
+
+
 
 export function signUp(username, email, password) {
+  const newUser = {
+    id: ids.generate(),
+    username: username,
+    email: email,
+    password: password,
+    avatarUri: IMAGES.AVATAR,
+  };
   return {
-    type: types.SIGN_UP,
-    username,
-    email,
-    password,
+    type  :types.SIGN_UP,
+    newUser
   };
 }
 
@@ -18,11 +28,18 @@ export function signIn(email, password) {
 }
 
 export function sendPost(user, postText, image) {
+  const post = {
+    postId: ids.generate(),
+    user: user,
+    postText: postText,
+    time: (new Date()).valueOf(),
+    usersLike: [],
+    image: image,
+    comments: [],
+  };
   return {
     type: types.SEND_POST,
-    user,
-    postText,
-    image,
+    post
   };
 }
 export function likePost(user, postId) {
@@ -62,11 +79,16 @@ export function changeEmail(email) {
   };
 }
 export function addComment(post, commentText, user, image) {
+  const comment = {
+    commentId: ids.generate(),
+    commentText: commentText,
+    user: user,
+    time: new Date(),
+    commentImage: image,
+  };
   return {
     type: types.ADD_COMMENT,
-    post,
-    commentText,
-    user,
-    image,
+    comment,
+    post
   };
 }
