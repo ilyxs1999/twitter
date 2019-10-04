@@ -3,6 +3,8 @@ import {Overlay, Input} from 'react-native-elements';
 import {View} from 'react-native';
 import {styles} from './styles';
 import {Button} from '../components';
+import i18n from '../localization';
+
 
 export function Alert(props) {
   return (
@@ -11,12 +13,12 @@ export function Alert(props) {
       <View style={styles.overlayDirection}>
         <Button
           onPress={props.saveFunc}
-          title={'save'}
+          title={i18n.t('LOGIN.SAVE')}
           style={styles.overlayButton}
         />
         <Button
           onPress={props.back}
-          title={'back'}
+          title={i18n.t('LOGIN.BACK')}
           style={styles.overlayButton}
         />
       </View>

@@ -4,7 +4,7 @@ import {Text, Touchable, Button} from '../../components';
 import {connect} from 'react-redux';
 import {ListItem} from 'react-native-elements';
 import NavigationService from '../../services/NavigationService';
-import {Post} from '../../components/post';
+import Post from '../../components/post';
 import {Comment} from '../../components/comment';
 import {addComment} from '../../store/actions';
 import ImagePicker from 'react-native-image-picker';
@@ -13,23 +13,30 @@ import * as values from '../../constants/values';
 import * as lodash from 'lodash';
 import * as image from '../../constants/img';
 import moment from 'moment'
-
+import AudioRecorderPlayer from 'react-native-audio-recorder-player';
+import i18n from '../../localization';
 
 class Comments extends PureComponent {
+  constructor(props) {
+    super(props)
+    this.state = {
+      commentText: '',
+      image: null,
+    };
+    this.audioRecorderPlayer = new AudioRecorderPlayer();
+  }
+
   static navigationOptions = {
     headerLeft: (
       <Touchable
-        onPress={() => NavigationService.navigate('Posts')}
+        onPress={() => NavigationService.reset('Posts')}
         style={styles.backButton}>
-        <Text style={styles.backText}>{values.BACK_BUTTON}</Text>
+        <Text style={styles.backText}>{i18n.t('BACK_BUTTON')}</Text>
       </Touchable>
     ),
   };
 
-  state = {
-    commentText: '',
-    image: null,
-  };
+  
 
   chooseFile = () => () => {
     let options = {
@@ -67,14 +74,11 @@ class Comments extends PureComponent {
             this.scrollView.scrollToEnd({animated: true});
           }}>
           <Post
-            avatar={post.user.avatarUri}
-            avatarOnPress={this.navigate('Profile', {user: post.user})}
-            username={post.user.username}
-            postText={post.postText}
-            postImage={post.image}
-            postTime={`${moment(post.time).format(values.DATE_FORMAT)}`}
+            post={post}
+            path={post.path}
+            audioRecorderPlayer = {this.audioRecorderPlayer}
           />
-          <ListItem title={'Comments'} bottomDivider />
+          <ListItem title={i18n.t('POSTS.COMMENTS')} bottomDivider />
           {post.comments.map(comment => (
             <Comment
               avatar={lodash.get(comment, 'user.avatarUri', image.AVATAR)}
@@ -96,7 +100,7 @@ class Comments extends PureComponent {
           style={styles.input}
           value={this.state.commentText}
           onChangeText={this.handleCommentChange()}
-          placeholder={values.WRITE_YOUR_POST}
+          placeholder={i18n.t('POSTS.WRITE_YOUR_COMMENT')}
           multiline={true}
           scrollEnabled={true}
         />
@@ -108,12 +112,12 @@ class Comments extends PureComponent {
               this.props.user,
               this.state.image,
             )}
-            title={values.SEND}
+            title={i18n.t('POSTS.SEND')}
             style={styles.sendButton}
           />
           <Button
             onPress={this.chooseFile()}
-            title={values.LOAD_IMAGE}
+            title={i18n.t('POSTS.LOAD_IMAGE')}
             style={styles.chooseButton}
           />
         </View>

@@ -5,6 +5,8 @@ import {Image, StyleSheet} from 'react-native';
 import {styles} from './styles';
 import {connect} from 'react-redux';
 import * as image from '../../constants/img'
+import i18n from '../../localization';
+
 
 class Auth extends PureComponent {
   static navigationOptions = {
@@ -33,12 +35,12 @@ class Auth extends PureComponent {
           <Button
             onPress={this.navigate("SignIn")}
             style={styles.button}
-            title="Sign in"
+            title={  i18n.t('LOGIN.LOGIN')}
           />
           <Button
             onPress={this.navigate("SignUp")}
             style={styles.button}
-            title="Sign up"
+            title={  i18n.t('LOGIN.REGISTER')}
           />
         </View>
       </View>

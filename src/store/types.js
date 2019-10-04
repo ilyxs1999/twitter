@@ -10,3 +10,5 @@ export const CHANGE_USERNAME = 'CHANGE_USERNAME';
 export const CHANGE_PASSWORD = 'CHANGE_PASSWORD';
 export const CHANGE_EMAIL = 'CHANGE_EMAIL';
 export const ADD_COMMENT = 'ADD_COMMENT';
+export const SEND_VOICE_POST = "SEND_VOICE_POST"
+export const GET_USERS = "GET_USERS"

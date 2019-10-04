@@ -22,6 +22,11 @@ export const styles = StyleSheet.create({
     color: 'blue',
   },
   image: {
+    margin : 10,
+    width: 200,
+    height: 200,
+  },
+  map: {
     width: 200,
     height: 200,
   },

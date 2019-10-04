@@ -15,3 +15,4 @@ export const SING_UP = 'Sign Up'
 export const DEFAULT_USERNAME = 'Error, username not found'
 export const DEFAULT_EMAIL = 'Error, email not found'
 export const DATE_FORMAT = "HH:mm:ss, YYYY-MM-DD"
+export const MARKER = "Marker"

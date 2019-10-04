@@ -24,11 +24,18 @@ function reset(name) {
     }),
   );
 }
+
 function pop(n) {
   _navigator.dispatch(StackActions.pop(n));
 }
 
+function replace(routeName) {
+  _navigator.dispatch(StackActions.replace(routeName));
+
+}
+
 export default {
+  replace,
   pop,
   reset,
   navigate,

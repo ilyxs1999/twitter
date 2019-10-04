@@ -6,6 +6,7 @@ import ImagePicker from 'react-native-image-picker';
 import {connect} from 'react-redux';
 import {styles} from './styles';
 import * as values from '../../constants/values';
+import i18n from '../../localization';
 import {
   setAvatar,
   logOut,
@@ -14,6 +15,7 @@ import {
   changeEmail,
 } from '../../store/actions';
 import NavigationService from '../../services/NavigationService';
+
 
 class Account extends PureComponent {
   constructor(props) {
@@ -85,7 +87,7 @@ class Account extends PureComponent {
       <Touchable
         onPress={() => NavigationService.reset('Posts')}
         style={styles.backButtonContainer}>
-        <Text style={styles.backButtonText}>{values.BACK_BUTTON}</Text>
+        <Text style={styles.backButtonText}>{i18n.t('BACK_BUTTON')}</Text>
       </Touchable>
     ),
   };
@@ -108,7 +110,7 @@ class Account extends PureComponent {
             <Text
               style={
                 styles.textInfo
-              }>{`${values.USERNAME}: ${this.props.user.username}`}</Text>
+              }>{`${i18n.t('LOGIN.USERNAME')}: ${this.props.user.username}`}</Text>
             <Icon name="create" />
           </Touchable>
           <Touchable
@@ -117,17 +119,17 @@ class Account extends PureComponent {
             <Text
               style={
                 styles.textInfo
-              }>{`${values.EMAIL}: ${this.props.user.email}`}</Text>
+              }>{`${i18n.t('LOGIN.EMAIL')}: ${this.props.user.email}`}</Text>
             <Icon name="create" />
           </Touchable>
           <Touchable
             style={styles.textContainer}
             onPress={this.handleClick(values.TYPE_PASSWORD)}>
-            <Text style={styles.textInfo}>{`${values.CHANGE_PASSWORD}`}</Text>
+            <Text style={styles.textInfo}>{`${i18n.t('LOGIN.CHANGE_PASSWORD')}`}</Text>
             <Icon name="create" />
           </Touchable>
         </View>
-        <Button title={values.LOG_OUT} onPress={this.logOut()} />
+        <Button title={i18n.t('LOGIN.LOG_OUT')} onPress={this.logOut()} />
         <Alert
           isVisible={this.state.overlayVisible}
           value={this.state.text}

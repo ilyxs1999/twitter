@@ -12,4 +12,10 @@ export const styles = StyleSheet.create({
   button: {
     margin: 10,
   },
+  backButton: {
+    padding: 10,
+  },
+  backText: {
+    fontSize: 18,
+  },
 });

@@ -1,19 +1,26 @@
 import React from 'react';
 import {View, Touchable, Text} from '../../components';
 import {Button} from '../../components';
-import {ScrollView, TextInput, Image, SafeAreaView} from 'react-native';
+import {TextInput, Image, SafeAreaView, FlatList} from 'react-native';
 import * as COLORS from '../../constants/colors';
-import {Icon, Card, Overlay} from 'react-native-elements';
+import {Icon, CheckBox, Overlay} from 'react-native-elements';
 import NavigationService from '../../services/NavigationService';
 import {connect} from 'react-redux';
-import {sendPost, likePost} from '../../store/actions';
+import {sendPost, likePost, sendVoicePost} from '../../store/actions';
 import ImagePicker from 'react-native-image-picker';
-import {Post} from '../../components/post';
+import Post from '../../components/post';
 import {styles} from './styles';
-import * as values from '../../constants/values';
-import * as lodash from 'lodash';
-import * as image from '../../constants/img';
-import moment from 'moment'
+import Geolocation from '@react-native-community/geolocation';
+import MapView, {Marker} from 'react-native-maps';
+import ids from 'shortid';
+import AudioRecorderPlayer from 'react-native-audio-recorder-player';
+import i18n from '../../localization';
+import {
+  Menu,
+  MenuOptions,
+  MenuOption,
+  MenuTrigger,
+} from 'react-native-popup-menu';
 
 class Posts extends React.Component {
   constructor(props) {
@@ -22,10 +29,15 @@ class Posts extends React.Component {
       postText: '',
       posts: props.posts,
       image: null,
+      location: null,
       isVisible: false,
-      fullScreenImage : null
+      fullScreenImage: null,
+      isVisibleFullMap: false,
+      fullScreenMap: null,
+      checked: false,
+      path: '',
     };
-    this.scrollView = null;
+    this.audioRecorderPlayer = new AudioRecorderPlayer();
   }
 
   static navigationOptions = {
@@ -45,7 +57,7 @@ class Posts extends React.Component {
     ),
   };
 
-  chooseFile = () => () => {
+  chooseFile = () => {
     let options = {
       noData: true,
     };
@@ -56,12 +68,31 @@ class Posts extends React.Component {
     });
   };
 
-  openImage = (image) =>() => {
-    this.setState({fullScreenImage : image,isVisible: true});
+  getLocation = () => {
+    Geolocation.getCurrentPosition(location => {
+      const cords = {
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+        latitudeDelta: 1,
+        longitudeDelta: 1,
+      };
+      this.setState({location: cords});
+    });
+  };
+
+  openMap = location => () => {
+    this.setState({fullScreenMap: location, isVisibleFullMap: true});
+  };
+  closeMap = () => {
+    this.setState({fullScreenMap: null, isVisibleFullMap: false});
+  };
+
+  openImage = image => () => {
+    this.setState({fullScreenImage: image, isVisible: true});
   };
 
   closeImage = () => {
-    this.setState({fullScreenImage : null,isVisible: false});
+    this.setState({fullScreenImage: null, isVisible: false});
   };
 
   static getDerivedStateFromProps(props, state) {
@@ -71,20 +102,36 @@ class Posts extends React.Component {
     }
     return null;
   }
+  handleCheckBox = async () => {
+    if (!this.state.checked) {
+      await this.setState({path: `${ids.generate()}.m4a`});
+      this.onStartRecord();
+    } else {
+      this.onStopRecord();
+      await this.props.sendVoicePost(this.props.user, this.state.path);
+    }
+    this.setState({checked: !this.state.checked});
+  };
+
+  onStartRecord = async () => {
+    await this.audioRecorderPlayer.startRecorder(this.state.path);
+    this.audioRecorderPlayer.addRecordBackListener();
+  };
+
+  onStopRecord = async () => {
+    await this.audioRecorderPlayer.stopRecorder();
+    this.audioRecorderPlayer.removeRecordBackListener();
+  };
 
   sendPost = () => {
-    this.props.sendPost(this.props.user, this.state.postText, this.state.image);
+    this.props.sendPost(
+      this.props.user,
+      this.state.postText,
+      this.state.image,
+      this.state.location,
+    );
 
-    this.setState({postText: '', image: null});
-  };
-
-  scrollToEnd = () => {
-    this.scrollView.scrollToEnd();
-  };
-
-  getTime = i => {
-    const date = new Date(this.state.posts[i].time);
-    return `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+    this.setState({postText: '', image: null, location: null});
   };
 
   navigate = (name, params) => () => {
@@ -94,63 +141,80 @@ class Posts extends React.Component {
   render() {
     return (
       <SafeAreaView style style={styles.container}>
-        <Card containerStyle={styles.card}>
-          <ScrollView
-            ref={scrollView => {
-              this.scrollView = scrollView;
-            }}
-            onContentSizeChange={(contentWidth, contentHeight) => {
-              this.scrollView.scrollToEnd({animated: true});
-            }}>
-            {this.state.posts.map((post, index) => (
-              <Touchable
-                key={index}
-                onPress={this.navigate('Comments', {post: post})}>
-                <Post
-                  avatar={lodash.get(post, 'user.avatarUri', image.AVATAR)}
-                  avatarOnPress={this.navigate('Profile', {user: post.user})}
-                  username={lodash.get(
-                    post,
-                    'user.username',
-                    values.DEFAULT_USERNAME,
-                  )}
-                  postImageOnPress={this.openImage(post.image)}
-                  postText={post.postText}
-                  postImage={post.image}
-                  postTime={`${moment(post.time).format(values.DATE_FORMAT)}`}
-                />
-              </Touchable>
-            ))}
-          </ScrollView>
-        </Card>
-        <TextInput
-          style={styles.input}
-          value={this.state.postText}
-          onChangeText={postText => this.setState({postText})}
-          placeholder={values.WRITE_YOUR_POST}
-          maxLength={240}
-          multiline={true}
-          scrollEnabled={true}
+        <FlatList
+          extraData={this.state}
+          inverted={true}
+          style={styles.card}
+          onEndReached={this.loadData}
+          data={this.state.posts}
+          renderItem={({item}) => (
+            <Touchable onPress={this.navigate('Comments', {post: item})}>
+              <Post
+                post={item}
+                postLocationOnPress={this.openMap(item.location)}
+                postImageOnPress={this.openImage(item.image)}
+                audioRecorderPlayer={this.audioRecorderPlayer}
+              />
+            </Touchable>
+          )}
+          keyExtractor={post => post.postId}
         />
+
+        {!this.state.checked && (
+          <TextInput
+            style={styles.input}
+            value={this.state.postText}
+            onChangeText={postText => this.setState({postText})}
+            placeholder={i18n.t('POSTS.WRITE_YOUR_POST')}
+            maxLength={240}
+            multiline={true}
+            scrollEnabled={true}
+          />
+        )}
+
         <View style={styles.buttonGroup}>
+          <CheckBox
+            uncheckedIcon={<Icon name="mic-none" />}
+            checkedIcon={<Icon name="stop" />}
+            checked={this.state.checked}
+            onPress={this.handleCheckBox}
+            containerStyle={styles.recorder}
+          />
           <Button
             onPress={this.sendPost}
-            title={values.SEND}
+            title={i18n.t('POSTS.SEND')}
             style={styles.sendButton}
           />
-          <Button
-            onPress={this.chooseFile()}
-            title={values.LOAD_IMAGE}
-            style={styles.chooseButton}
-          />
+          <View style={styles.location}>
+            <Icon name={'my-location'} onPress={this.getLocation} />
+          </View>
+          <Menu style={styles.chooseButton}>
+            <MenuTrigger children={<Icon name={'attach-file'} />} />
+            <MenuOptions>
+              <MenuOption
+                onSelect={this.chooseFile}
+                text={i18n.t('POSTS.LOAD_IMAGE')}
+              />
+            </MenuOptions>
+          </Menu>
         </View>
-        <Overlay
-          fullScreen={true}
-          isVisible={this.state.isVisible}
-          onBackdropPress={() => this.setState({isVisible: false})}>
-            <SafeAreaView style={styles.overlay}>
-              <Image style={styles.fullScreenImage} source={{uri : this.state.fullScreenImage}}/>
-          <Button onPress={this.closeImage} title={'close'} />
+        <Overlay fullScreen={true} isVisible={this.state.isVisible}>
+          <SafeAreaView style={styles.overlay}>
+            <Image
+              style={styles.fullScreenImage}
+              source={{uri: this.state.fullScreenImage}}
+            />
+            <Button onPress={this.closeImage} title={i18n.t('POSTS.CLOSE')} />
+          </SafeAreaView>
+        </Overlay>
+        <Overlay fullScreen={true} isVisible={this.state.isVisibleFullMap}>
+          <SafeAreaView style={styles.overlay}>
+            <MapView
+              style={styles.overlay}
+              initialRegion={this.state.fullScreenMap}>
+              <Marker coordinate={this.state.fullScreenMap} />
+            </MapView>
+            <Button onPress={this.closeMap} title={i18n.t('POSTS.CLOSE')} />
           </SafeAreaView>
         </Overlay>
       </SafeAreaView>
@@ -158,15 +222,15 @@ class Posts extends React.Component {
   }
 }
 const mapStateToProps = state => ({
-  like: state.posts.like,
   user: state.users.user,
   posts: state.posts.posts,
 });
 
 const mapDispatchToProps = dispatch => ({
-  sendPost: (user, postText, image) =>
-    dispatch(sendPost(user, postText, image)),
+  sendPost: (user, postText, image, location) =>
+    dispatch(sendPost(user, postText, image, location)),
   likePost: (user, postText) => dispatch(likePost(user, postText)),
+  sendVoicePost: (user, path) => dispatch(sendVoicePost(user, path)),
 });
 
 export default connect(

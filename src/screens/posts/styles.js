@@ -14,19 +14,28 @@ export const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     padding: 10,
   },
-  sendButton: {
+  recorder : {
     height: 40,
-    flex: 4,
-    margin: 20,
+    alignSelf :"center",
   },
-  chooseButton: {
+  location : {
+    flex : 1,
     height: 40,
-    flex: 1,
-    margin: 20,
+  },
+  sendButton: {
+    flex  : 5,
+    height: 40,
+  },
+  
+  chooseButton: {
+    flex : 1,
+    height : 40
   },
   buttonGroup: {
     height: 40,
     flexDirection: 'row',
+    justifyContent : "space-between"
+    
   },
   overlay : {
     flex : 1,
@@ -35,5 +44,8 @@ export const styles = StyleSheet.create({
   fullScreenImage : {
     flex : 1,
     resizeMode : "contain"
+  },
+  fullScreenMap : {
+    flex :1
   }
 });

@@ -14,5 +14,11 @@ export const styles = StyleSheet.create({
   },
   errorText : {
     color : "red"
-  }
+  },
+  backButton: {
+    padding: 10,
+  },
+  backText: {
+    fontSize: 18,
+  },
 });

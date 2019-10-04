@@ -22,6 +22,13 @@ export default function users(state = initialState, action) {
         users: state.users.concat(action.newUser),
       };
     }
+    case types.GET_USERS : {
+      console.log(state.users)
+      return {
+        ...state,
+        users : action.data
+      }
+    }
     case types.SIGN_IN: {
       const email = action.email;
       const password = action.password;

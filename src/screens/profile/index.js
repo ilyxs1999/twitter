@@ -9,6 +9,7 @@ import * as values from '../../constants/values';
 import {get} from 'lodash';
 import {AVATAR} from '../../constants/img'
 import {DEFAULT_USERNAME, DEFAULT_EMAIL} from '../../constants/values'
+import i18n from '../../localization';
 
 
 class Profile extends PureComponent {
@@ -17,7 +18,7 @@ class Profile extends PureComponent {
       <Touchable
         onPress={() => NavigationService.pop(1)}
         style={styles.backButton}>
-        <Text style={styles.backText}>{values.BACK_BUTTON}</Text>
+        <Text style={styles.backText}>{i18n.t('BACK_BUTTON')}</Text>
       </Touchable>
     ),
   };

@@ -1,9 +1,22 @@
 import * as types from './types';
-import ids from 'shortid'
+import ids from 'shortid';
 import * as IMAGES from '../constants/img';
+import {api} from '../api/index';
 
-
-
+export function getUsers() {
+  return dispatch =>
+    api
+      .get('/users')
+      .then(response => {
+        dispatch({
+          type: types.GET_USERS,
+          data: response.data,
+        });
+      })
+      .catch(error => {
+        console.log(error);
+      });
+}
 
 export function signUp(username, email, password) {
   const newUser = {
@@ -14,8 +27,8 @@ export function signUp(username, email, password) {
     avatarUri: IMAGES.AVATAR,
   };
   return {
-    type  :types.SIGN_UP,
-    newUser
+    type: types.SIGN_UP,
+    newUser,
   };
 }
 
@@ -27,25 +40,45 @@ export function signIn(email, password) {
   };
 }
 
-export function sendPost(user, postText, image) {
+export function sendVoicePost(user, path) {
+  const post = {
+    postId: ids.generate(),
+    time: new Date().valueOf(),
+    usersLike: [],
+    comments: [],
+    postText: null,
+    location: null,
+    image: null,
+    user,
+    path,
+  };
+  return {
+    type: types.SEND_VOICE_POST,
+    post,
+  };
+}
+
+export function sendPost(user, postText, image, location) {
   const post = {
     postId: ids.generate(),
     user: user,
     postText: postText,
-    time: (new Date()).valueOf(),
+    time: new Date().valueOf(),
     usersLike: [],
     image: image,
     comments: [],
+    path: null,
+    location: location,
   };
   return {
     type: types.SEND_POST,
-    post
+    post,
   };
 }
-export function likePost(user, postId) {
+export function likePost(id, postId) {
   return {
     type: types.LIKE_POST,
-    user,
+    id,
     postId,
   };
 }
@@ -89,6 +122,6 @@ export function addComment(post, commentText, user, image) {
   return {
     type: types.ADD_COMMENT,
     comment,
-    post
+    post,
   };
 }
