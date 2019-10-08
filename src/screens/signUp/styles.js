@@ -7,18 +7,18 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
   },
   input: {
+    padding : 3,
     margin: 10,
+    borderWidth: 1,
+    borderRadius: 5,
+    height: 30,
+    width: 200,
   },
-  button: {
-    margin: 10,
+  formContainer: {
+    alignItems: 'center',
   },
-  errorText : {
-    color : "red"
-  },
-  backButton: {
-    padding: 10,
-  },
-  backText: {
-    fontSize: 18,
+  textError: {
+    fontSize: 10,
+    color: 'red',
   },
 });

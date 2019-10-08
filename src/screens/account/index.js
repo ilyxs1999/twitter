@@ -8,14 +8,10 @@ import {styles} from './styles';
 import * as values from '../../constants/values';
 import i18n from '../../localization';
 import {
-  setAvatar,
   logOut,
-  changeUsername,
-  changePassword,
-  changeEmail,
+  changeUserInfo
 } from '../../store/actions';
 import NavigationService from '../../services/NavigationService';
-
 
 class Account extends PureComponent {
   constructor(props) {
@@ -34,61 +30,43 @@ class Account extends PureComponent {
     };
     ImagePicker.launchImageLibrary(options, response => {
       if (response.uri) {
-        this.props.setAvatar(response.uri);
-
+        this.props.changeUserInfo(response.uri,values.TYPE_AVATAR_URI);
         this.setState({avatarUri: response.uri});
       }
     });
   };
 
-  logOut = () => () => {
+  logOut =  () => {
     this.props.logOut();
 
     NavigationService.navigate('Auth');
   };
 
   handleClick = type => () => {
-    this.setState({type: type});
-
-    this.setState({overlayVisible: true});
+    this.setState({type ,overlayVisible: true});
   };
 
-  save = () => () => {
-    switch (this.state.type) {
-      case 'PASSWORD':
-        this.props.changePassword(this.state.text);
-        break;
-      case 'USERNAME':
-        this.props.changeUsername(this.state.text);
-        break;
-      case 'EMAIL':
-        this.props.changeEmail(this.state.text);
-        break;
-    }
+  save = () => {
+    this.props.changeUserInfo(this.state.text,this.state.type)
+    
     this.clean();
   };
 
-  close = () => () => {
+  close =  () => {
     this.clean();
   };
 
   clean = () => {
-    this.setState({text: ''});
-
-    this.setState({overlayVisible: false});
+    this.setState({text: '',overlayVisible: false});
   };
 
-  handleChangeText = () => text => {
+  handleChangeText =  text => {
     this.setState({text});
   };
 
   static navigationOptions = {
     headerLeft: (
-      <Touchable
-        onPress={() => NavigationService.reset('Posts')}
-        style={styles.backButtonContainer}>
-        <Text style={styles.backButtonText}>{i18n.t('BACK_BUTTON')}</Text>
-      </Touchable>
+      <Icon name="arrow-back"  onPress={() => NavigationService.reset('Posts')} />
     ),
   };
 
@@ -107,35 +85,31 @@ class Account extends PureComponent {
           <Touchable
             style={styles.textContainer}
             onPress={this.handleClick(values.TYPE_USERNAME)}>
-            <Text
-              style={
-                styles.textInfo
-              }>{`${i18n.t('LOGIN.USERNAME')}: ${this.props.user.username}`}</Text>
+            <Text style={styles.textInfo}>{`${i18n.t('LOGIN.USERNAME')}: ${this.props.user.username}`}</Text>
             <Icon name="create" />
           </Touchable>
           <Touchable
             style={styles.textContainer}
             onPress={this.handleClick(values.TYPE_EMAIL)}>
-            <Text
-              style={
-                styles.textInfo
-              }>{`${i18n.t('LOGIN.EMAIL')}: ${this.props.user.email}`}</Text>
+            <Text style={styles.textInfo}>{`${i18n.t('LOGIN.EMAIL')}: ${this.props.user.email}`}</Text>
             <Icon name="create" />
           </Touchable>
           <Touchable
             style={styles.textContainer}
             onPress={this.handleClick(values.TYPE_PASSWORD)}>
-            <Text style={styles.textInfo}>{`${i18n.t('LOGIN.CHANGE_PASSWORD')}`}</Text>
+            <Text style={styles.textInfo}>{`${i18n.t(
+              'LOGIN.CHANGE_PASSWORD',
+            )}`}</Text>
             <Icon name="create" />
           </Touchable>
         </View>
-        <Button title={i18n.t('LOGIN.LOG_OUT')} onPress={this.logOut()} />
+        <Button title={i18n.t('LOGIN.LOG_OUT')} onPress={this.logOut} />
         <Alert
           isVisible={this.state.overlayVisible}
           value={this.state.text}
-          onChangeText={this.handleChangeText()}
-          saveFunc={this.save()}
-          back={this.close()}
+          onChangeText={this.handleChangeText}
+          saveFunc={this.save}
+          back={this.close}
         />
       </View>
     );
@@ -146,11 +120,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  setAvatar: avatarUri => dispatch(setAvatar(avatarUri)),
   logOut: () => dispatch(logOut()),
-  changeUsername: username => dispatch(changeUsername(username)),
-  changePassword: password => dispatch(changePassword(password)),
-  changeEmail: email => dispatch(changeEmail(email)),
+  changeUserInfo: (text , userField) => dispatch(changeUserInfo(text , userField)),
 });
 
 export default connect(

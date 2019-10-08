@@ -1,18 +1,19 @@
 import React from 'react';
-import {Avatar, CheckBox, Icon, Slider} from 'react-native-elements';
+import {Avatar, CheckBox, Icon} from 'react-native-elements';
 import {View, Image} from 'react-native';
-import {Text, Button} from '../components';
+import {Text} from '../components';
 import {styles} from './styles';
 import {Touchable} from '../components';
 import MapView, {Marker} from 'react-native-maps';
-import * as lodash from 'lodash';
-import * as image from '../constants/img';
+import {get} from 'lodash';
+import {AVATAR} from '../constants/img';
 import NavigationService from '../services/NavigationService';
-import * as values from '../constants/values';
+import  {DEFAULT_USERNAME, DATE_FORMAT} from '../constants/values';
 import moment from 'moment';
 import VoicePlayer from './voicePlayer';
 import {connect} from 'react-redux';
 import {likePost} from '../store/actions';
+
 
 class Post extends React.Component {
   constructor(props) {
@@ -20,17 +21,18 @@ class Post extends React.Component {
     this.state = {
       liked: false,
     };
-    this.post = this.props.post;
-    this.user = this.props.user;
+  }
+
+  componentDidMount(){
+    this.setState({liked : this.isLiked()})
   }
 
   isLiked = () => {
-    const {usersLike} = this.props.post;
+    const usersLike = get(this.props,'post.usersLike', []);
     const likeIndex = usersLike.findIndex(item => {
       return item == this.props.user.id;
     });
-    if (likeIndex != -1) return true;
-      else return false;
+    return likeIndex != -1
   };
 
   navigate = (name, params) => () => {
@@ -39,11 +41,8 @@ class Post extends React.Component {
 
   like = () => {
     this.setState({liked: !this.state.liked});
-    this.props.likePost(this.user.id, this.post.postId);
+    this.props.likePost(this.props.user.id, this.props.post.postId);
   };
-  componentDidMount(){
-    this.setState({liked : this.isLiked()})
-  }
 
   render() {
     return (
@@ -54,42 +53,42 @@ class Post extends React.Component {
               size="medium"
               rounded
               source={{
-                uri: lodash.get(this.post, 'user.avatarUri', image.AVATAR),
+                uri: get(this.props.post, 'user.avatarUri', AVATAR),
               }}
-              onPress={this.navigate('Profile', {user: this.post.user})}
+              onPress={this.navigate('Profile', {user: this.props.post.user})}
             />
             <Text style={styles.postUsername}>
-              {lodash.get(this.post, 'user.username', values.DEFAULT_USERNAME)}
+              {get(this.props.post, 'user.username', DEFAULT_USERNAME)}
             </Text>
           </View>
 
           <View style={styles.postContentContainer}>
             <Text>
-              {this.post.postText && <Text>{this.post.postText}</Text>}
-              {this.post.image && (
+              {this.props.post.postText && <Text>{get(this.props.post,'postText',"indefinite")}</Text>}
+              {this.props.post.image && (
                 <Touchable onPress={this.props.postImageOnPress}>
-                  <Image style={styles.image} source={{uri: this.post.image}} />
+                  <Image style={styles.image} source={{uri: this.props.post.image}} />
                 </Touchable>
               )}
-              {this.post.location && (
+              {this.props.post.location && (
                 <MapView
                   style={styles.map}
                   onPress={this.props.postLocationOnPress}
-                  initialRegion={this.post.location}>
-                  <Marker coordinate={this.post.location} />
+                  initialRegion={this.props.post.location}>
+                  <Marker coordinate={this.props.post.location} />
                 </MapView>
               )}
             </Text>
-            {this.post.path && (
+            {this.props.post.path && (
               <VoicePlayer
                 audioRecorderPlayer={this.props.audioRecorderPlayer}
-                path={this.post.path}
+                path={this.props.post.path}
               />
             )}
             <View style={styles.postTimeContainer}>
               <Text style={styles.postTimeText}>{`${moment(
-                this.post.time,
-              ).format(values.DATE_FORMAT)}`}</Text>
+                this.props.post.time,
+              ).format(DATE_FORMAT)}`}</Text>
               <CheckBox
                 containerStyle={styles.postCheckbox}
                 uncheckedIcon={
@@ -101,7 +100,7 @@ class Post extends React.Component {
                 checked={this.state.liked}
                 onPress={this.like}
               />
-              <Text>{this.post.usersLike.length}</Text>
+              <Text>{this.props.post.usersLike.length}</Text>
             </View>
           </View>
         </View>

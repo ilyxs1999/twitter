@@ -1,46 +1,41 @@
 import * as types from './types';
 import ids from 'shortid';
-import * as IMAGES from '../constants/img';
-import {api} from '../api/index';
+import {AVATAR} from '../constants/img';
+import {createAction} from 'redux-actions';
 
-export function getUsers() {
-  return dispatch =>
-    api
-      .get('/users')
-      .then(response => {
-        dispatch({
-          type: types.GET_USERS,
-          data: response.data,
-        });
-      })
-      .catch(error => {
-        console.log(error);
-      });
-}
+const setUserAction = createAction(types.SET_USER);
+const setLoginFlag = createAction(types.SET_LOGIN_FLAG);
+const sendVoicePostAction = createAction(types.SEND_VOICE_POST);
+const sendPostAction = createAction(types.SEND_POST);
+const likePostAction = createAction(types.LIKE_POST);
+const addCommentAction = createAction(types.ADD_COMMENT);
+const removeUserAction = createAction(types.REMOVE_USER);
+const setUsersAction = createAction(types.SET_USERS);
 
-export function signUp(username, email, password) {
+export const signUp = (username, email, password) => (dispatch, getState) => {
+  const {users} = getState().users
   const newUser = {
     id: ids.generate(),
     username: username,
     email: email,
     password: password,
-    avatarUri: IMAGES.AVATAR,
+    avatarUri: AVATAR,
   };
-  return {
-    type: types.SIGN_UP,
-    newUser,
-  };
-}
+  dispatch(setUsersAction([...users,newUser]));
+};
 
-export function signIn(email, password) {
-  return {
-    type: types.SIGN_IN,
-    email,
-    password,
-  };
-}
+export const signIn = (email, password) => (dispatch, getState) => {
+  const {users} = getState().users;
+  const index = users.findIndex(user => {
+    return user.email == email && user.password == password;
+  });
+  if (index != -1) {
+    dispatch(setUserAction(users[index]));
+    dispatch(setLoginFlag(true));
+  }
+};
 
-export function sendVoicePost(user, path) {
+export const sendVoicePost = (user, path) => dispatch => {
   const post = {
     postId: ids.generate(),
     time: new Date().valueOf(),
@@ -52,13 +47,10 @@ export function sendVoicePost(user, path) {
     user,
     path,
   };
-  return {
-    type: types.SEND_VOICE_POST,
-    post,
-  };
-}
+  dispatch(sendVoicePostAction(post));
+};
 
-export function sendPost(user, postText, image, location) {
+export const sendPost = (user, postText, image, location) => dispatch => {
   const post = {
     postId: ids.generate(),
     user: user,
@@ -70,48 +62,52 @@ export function sendPost(user, postText, image, location) {
     path: null,
     location: location,
   };
-  return {
-    type: types.SEND_POST,
-    post,
+  dispatch(sendPostAction(post));
+};
+export const likePost = (id, postId) => (dispatch, getState) => {
+  let {posts} = getState().posts;
+  const index = posts.findIndex(item => {
+    return item.postId == postId;
+  });
+  const likeIndex = posts[index].usersLike.findIndex(item => {
+    return item == id;
+  });
+  if (likeIndex == -1) {
+    posts[index].usersLike = posts[index].usersLike.concat(id);
+  } else {
+    posts[index].usersLike.splice(likeIndex, 1);
+  }
+  dispatch(likePostAction(posts));
+};
+
+export const logOut = () => dispatch => {
+  dispatch(setLoginFlag(false));
+  dispatch(removeUserAction());
+};
+
+export const changeUserInfo = (text,userField) => (dispatch,getState)=> {
+  let {users, user} = getState().users;
+  let newUser = {
+    ...user,
+    [userField]: text,
   };
+  let index = users.findIndex(item => {
+    return item.id == user.id;
+  });
+  if (index != -1) {
+    users[index] = newUser;
+    dispatch(setUserAction(newUser));
+    dispatch(setUsersAction(users));
+  } else {
+    alert('error');
+  }
 }
-export function likePost(id, postId) {
-  return {
-    type: types.LIKE_POST,
-    id,
-    postId,
-  };
-}
-export function setAvatar(avatarUri) {
-  return {
-    type: types.SET_AVATAR,
-    avatarUri,
-  };
-}
-export function logOut() {
-  return {
-    type: types.LOG_OUT,
-  };
-}
-export function changeUsername(username) {
-  return {
-    type: types.CHANGE_USERNAME,
-    username,
-  };
-}
-export function changePassword(password) {
-  return {
-    type: types.CHANGE_PASSWORD,
-    password,
-  };
-}
-export function changeEmail(email) {
-  return {
-    type: types.CHANGE_EMAIL,
-    email,
-  };
-}
-export function addComment(post, commentText, user, image) {
+
+export const addComment = (post, commentText, user, image) => (
+  dispatch,
+  getState,
+) => {
+  const {posts} = getState().posts;
   const comment = {
     commentId: ids.generate(),
     commentText: commentText,
@@ -119,9 +115,16 @@ export function addComment(post, commentText, user, image) {
     time: new Date(),
     commentImage: image,
   };
+  const index = posts.findIndex(item => {
+    return item.postId == post.postId;
+  });
+  posts[index].comments = posts[index].comments.concat(comment);
+  dispatch(addCommentAction(posts));
+};
+
+export function setLanguage(language) {
   return {
-    type: types.ADD_COMMENT,
-    comment,
-    post,
+    type: types.SET_LANGUAGE,
+    language,
   };
 }

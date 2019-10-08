@@ -8,6 +8,7 @@ import Account from '../account';
 import Settings from '../settings';
 import Profile from '../profile';
 import Comments from '../comments';
+import Languages from "../languages"
 
 const AccountNavigator = createStackNavigator({
   Posts,
@@ -15,6 +16,7 @@ const AccountNavigator = createStackNavigator({
   Settings,
   Profile,
   Comments,
+  Languages
 });
 
 const AuthNavigator = createStackNavigator({

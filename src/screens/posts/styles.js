@@ -37,6 +37,11 @@ export const styles = StyleSheet.create({
     justifyContent : "space-between"
     
   },
+  tooltip : {
+    backgroundColor: 'white',
+    borderRadius: 5,
+    borderWidth: 1,
+  },
   overlay : {
     flex : 1,
     alignContent : "space-between"

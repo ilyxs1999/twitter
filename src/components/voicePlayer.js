@@ -1,21 +1,12 @@
 import React from 'react';
 import {View, Text} from 'react-native';
 import {CheckBox, Icon, Slider} from 'react-native-elements';
-import AudioRecorderPlayer from 'react-native-audio-recorder-player';
 import moment from 'moment';
+import { styles } from './styles';
+import {PLAY_TIME_FORMAT} from '../constants/values'
 
-interface IState {
-  checked: boolean;
-  currentDuration: string;
-  currentTime: string;
-}
 
-interface IProps {
-  audioRecorderPlayer: AudioRecorderPlayer;
-  path: string;
-}
-
-export default class VoicePlayer extends React.Component<IProps, IState> {
+export default class VoicePlayer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -33,13 +24,9 @@ export default class VoicePlayer extends React.Component<IProps, IState> {
         this.state.currentDuration === this.state.currentTime
       ) {
         this.onStartPlay().catch((error)=>{
-          console.log("Api call error");
-          alert(error.message);
        });
       } else if (this.state.checked) {
         this.onResumePlay().catch((error)=>{
-          console.log("Api call error");
-          alert(error.message);
        });
       } else {
         this.onStopPlay();
@@ -99,7 +86,7 @@ export default class VoicePlayer extends React.Component<IProps, IState> {
     });
   };
 
-  seekTo = () => value => {
+  seekTo = value => {
     this.setState({currentTime: value});
     this.audioRecorderPlayer.seekToPlayer(value);
   };
@@ -107,11 +94,7 @@ export default class VoicePlayer extends React.Component<IProps, IState> {
   render() {
     return (
       <View
-        style={{
-          flexDirection: 'row',
-          alignContent: 'space-between',
-          alignItems: 'center',
-        }}>
+        style={styles.voicePlayerContainer}>
         <CheckBox
           uncheckedIcon={<Icon name="play-arrow" />}
           checkedIcon={<Icon name="stop" />}
@@ -119,13 +102,13 @@ export default class VoicePlayer extends React.Component<IProps, IState> {
           onPress={this.playOnPress}
         />
         <Slider
-          style={{flex: 1, padding: 10}}
+          style={styles.slider}
           maximumValue={parseInt(this.state.currentDuration)}
           value={parseInt(this.state.currentTime)}
-          onValueChange={this.seekTo()}
+          onValueChange={this.seekTo}
         />
         <Text>{`${moment(parseInt(this.state.currentTime)).format(
-          'mm:ss',
+          PLAY_TIME_FORMAT,
         )}`}</Text>
       </View>
     );

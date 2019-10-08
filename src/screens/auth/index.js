@@ -1,10 +1,10 @@
 import React, {PureComponent} from 'react';
 import {View, Button} from '../../components';
 import NavigationService from '../../services/NavigationService';
-import {Image, StyleSheet} from 'react-native';
+import {Image} from 'react-native';
 import {styles} from './styles';
 import {connect} from 'react-redux';
-import * as image from '../../constants/img'
+import {LOGO} from '../../constants/img';
 import i18n from '../../localization';
 
 
@@ -13,13 +13,13 @@ class Auth extends PureComponent {
     header: null,
   };
 
-  componentDidMount() {
+  componentWillMount() {
     if (this.props.loginIn) this.props.navigation.navigate('Posts');
   }
 
-  navigate = (name) => () => {
-    NavigationService.navigate(name, {})
-  }
+  navigate = name => () => {
+    NavigationService.navigate(name, {});
+  };
 
   render() {
     return (
@@ -27,20 +27,19 @@ class Auth extends PureComponent {
         <Image
           style={styles.logo}
           source={{
-            uri:
-              image.LOGO,
+            uri: LOGO,
           }}
         />
         <View>
           <Button
-            onPress={this.navigate("SignIn")}
+            onPress={this.navigate('SignIn')}
             style={styles.button}
-            title={  i18n.t('LOGIN.LOGIN')}
+            title={i18n.t('LOGIN.LOGIN')}
           />
           <Button
-            onPress={this.navigate("SignUp")}
+            onPress={this.navigate('SignUp')}
             style={styles.button}
-            title={  i18n.t('LOGIN.REGISTER')}
+            title={i18n.t('LOGIN.REGISTER')}
           />
         </View>
       </View>

@@ -6,16 +6,18 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  input: {
-    margin: 10,
-  },
   button: {
     margin: 10,
   },
-  backButton: {
-    padding: 10,
+  input: {
+    padding : 3,
+    margin: 10,
+    borderWidth: 1,
+    borderRadius: 5,
+    height: 30,
+    width: 200,
   },
-  backText: {
-    fontSize: 18,
+  formContainer: {
+    alignItems: 'center',
   },
 });

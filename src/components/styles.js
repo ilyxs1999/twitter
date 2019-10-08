@@ -5,8 +5,6 @@ export const styles = StyleSheet.create({
     borderBottomColor: '#6a717d',
     borderBottomWidth: 1,
     padding: 5,
-  },
-  commentContainerDirection: {
     flexDirection: 'row',
   },
   commentAvatar: {
@@ -17,6 +15,14 @@ export const styles = StyleSheet.create({
   commentTextContainer: {
     flex: 6,
     justifyContent: 'space-between',
+  },
+  slider : {
+    flex: 1, padding: 10
+  },
+  voicePlayerContainer : {
+    flexDirection: 'row',
+    alignContent: 'space-between',
+    alignItems: 'center',
   },
   commentUsernameText: {
     color: 'blue',

@@ -3,7 +3,7 @@ import {View, Touchable, Text} from '../../components';
 import {Button} from '../../components';
 import {TextInput, Image, SafeAreaView, FlatList} from 'react-native';
 import * as COLORS from '../../constants/colors';
-import {Icon, CheckBox, Overlay} from 'react-native-elements';
+import {Icon, CheckBox, Overlay, Tooltip} from 'react-native-elements';
 import NavigationService from '../../services/NavigationService';
 import {connect} from 'react-redux';
 import {sendPost, likePost, sendVoicePost} from '../../store/actions';
@@ -15,12 +15,7 @@ import MapView, {Marker} from 'react-native-maps';
 import ids from 'shortid';
 import AudioRecorderPlayer from 'react-native-audio-recorder-player';
 import i18n from '../../localization';
-import {
-  Menu,
-  MenuOptions,
-  MenuOption,
-  MenuTrigger,
-} from 'react-native-popup-menu';
+
 
 class Posts extends React.Component {
   constructor(props) {
@@ -34,7 +29,7 @@ class Posts extends React.Component {
       fullScreenImage: null,
       isVisibleFullMap: false,
       fullScreenMap: null,
-      checked: false,
+      checked: true,
       path: '',
     };
     this.audioRecorderPlayer = new AudioRecorderPlayer();
@@ -103,7 +98,7 @@ class Posts extends React.Component {
     return null;
   }
   handleCheckBox = async () => {
-    if (!this.state.checked) {
+    if (this.state.checked) {
       await this.setState({path: `${ids.generate()}.m4a`});
       this.onStartRecord();
     } else {
@@ -139,6 +134,7 @@ class Posts extends React.Component {
   };
 
   render() {
+    console.log(this.state.fullScreenMap)
     return (
       <SafeAreaView style style={styles.container}>
         <FlatList
@@ -160,7 +156,7 @@ class Posts extends React.Component {
           keyExtractor={post => post.postId}
         />
 
-        {!this.state.checked && (
+        {this.state.checked && (
           <TextInput
             style={styles.input}
             value={this.state.postText}
@@ -174,8 +170,8 @@ class Posts extends React.Component {
 
         <View style={styles.buttonGroup}>
           <CheckBox
-            uncheckedIcon={<Icon name="mic-none" />}
-            checkedIcon={<Icon name="stop" />}
+            checkedIcon={<Icon name="mic-none" />}
+            uncheckedIcon={<Icon name="stop" />}
             checked={this.state.checked}
             onPress={this.handleCheckBox}
             containerStyle={styles.recorder}
@@ -188,15 +184,16 @@ class Posts extends React.Component {
           <View style={styles.location}>
             <Icon name={'my-location'} onPress={this.getLocation} />
           </View>
-          <Menu style={styles.chooseButton}>
-            <MenuTrigger children={<Icon name={'attach-file'} />} />
-            <MenuOptions>
-              <MenuOption
-                onSelect={this.chooseFile}
-                text={i18n.t('POSTS.LOAD_IMAGE')}
-              />
-            </MenuOptions>
-          </Menu>
+          <Tooltip
+            width={80}
+            containerStyle={styles.tooltip}
+            popover={
+              <Touchable onPress={this.chooseFile}>
+                <Text>{i18n.t('POSTS.LOAD_IMAGE')}</Text>
+              </Touchable>
+            }>
+            <Icon name={'attach-file'} />
+          </Tooltip>
         </View>
         <Overlay fullScreen={true} isVisible={this.state.isVisible}>
           <SafeAreaView style={styles.overlay}>
