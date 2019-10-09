@@ -6,20 +6,19 @@ import {Icon, Divider} from 'react-native-elements';
 import {connect} from 'react-redux';
 import NavigationService from '../../services/NavigationService';
 import {languages}  from "../../constants/languages"
-
+import i18n from '../../localization'
 
 
 class Languages extends PureComponent {
   
   static navigationOptions = {
     headerLeft: (
-      <Icon name="arrow-back"  onPress={() => NavigationService.pop(1)} />
+      <Icon name="arrow-back"  onPress={() => NavigationService.reset("Posts")} />
     ),
   };
 
   handle = (flag)=> () => {
-    AsyncStorage.setItem("language",flag)
-
+    i18n.locale = flag
   };
 
   render() {

@@ -12,12 +12,7 @@ const {languageTag} =
   RNLocalize.findBestAvailableLanguage(Object.keys(i18n.translations)) ||
   fallback;
 
-AsyncStorage.getItem('language').then(res => {
-  if (res) {
-    i18n.locale = res;
-  } else {
-    i18n.locale = languageTag
-  }
-});
+  i18n.locale = languageTag
+
 
 export default i18n;

@@ -11,7 +11,6 @@ import {logOut, changeUserInfo} from '../../store/actions';
 import NavigationService from '../../services/NavigationService';
 import {POSTS,AUTH} from "../../constants/routes"
 
-
 class Account extends PureComponent {
   constructor(props) {
     super(props);
