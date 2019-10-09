@@ -9,23 +9,51 @@ export const styles = StyleSheet.create({
     padding: 0,
     margin: 0,
   },
+  headerIcon : {
+    padding : 5
+  },
   input: {
     height: 80,
     justifyContent: 'flex-end',
     padding: 10,
   },
-  sendButton: {
+  recorder : {
     height: 40,
-    flex: 4,
-    margin: 20,
+    alignSelf :"center",
   },
-  chooseButton: {
+  location : {
+    flex : 1,
     height: 40,
-    flex: 1,
-    margin: 20,
+  },
+  sendButton: {
+    flex  : 5,
+    height: 40,
+  },
+  
+  chooseButton: {
+    flex : 1,
+    height : 40
   },
   buttonGroup: {
     height: 40,
     flexDirection: 'row',
+    justifyContent : "space-between"
+    
   },
+  tooltip : {
+    backgroundColor: 'white',
+    borderRadius: 5,
+    borderWidth: 1,
+  },
+  overlay : {
+    flex : 1,
+    alignContent : "space-between"
+  },
+  fullScreenImage : {
+    flex : 1,
+    resizeMode : "contain"
+  },
+  fullScreenMap : {
+    flex :1
+  }
 });

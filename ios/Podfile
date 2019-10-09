@@ -26,7 +26,17 @@ target 'Twitter' do
   pod 'DoubleConversion', :podspec => '../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec'
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
+  rn_maps_path = '../node_modules/react-native-maps'
+  pod 'react-native-google-maps', :path => rn_maps_path
+  pod 'GoogleMaps'
+  pod 'Google-Maps-iOS-Utils'
 
+
+  pod 'react-native-maps', :path => '../node_modules/react-native-maps'
+
+  pod 'RNAudioRecorderPlayer', :path => '../node_modules/react-native-audio-recorder-player'
+
+  pod 'RNSoundRecorder', :path => '../node_modules/react-native-sound-recorder'
 
   target 'TwitterTests' do
     inherit! :search_paths

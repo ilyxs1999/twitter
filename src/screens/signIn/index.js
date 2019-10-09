@@ -1,65 +1,70 @@
 import React, {PureComponent} from 'react';
 import {View, Button} from '../../components';
-import {Input} from 'react-native-elements';
+import {Icon} from 'react-native-elements';
 import {signIn} from '../../store/actions';
 import {connect} from 'react-redux';
 import NavigationService from '../../services/NavigationService';
-import {styles} from './styles'
+import {styles} from './styles';
+import i18n from '../../localization';
+import {Formik} from 'formik';
+import {TextInput} from 'react-native';
+import {POSTS} from "../../constants/routes"
+
 
 class SignIn extends PureComponent {
-  state = {
-    email: '',
-    password: '',
+  static navigationOptions = {
+    headerLeft: (
+      <Icon name="arrow-back" onPress={() => NavigationService.pop(1)} />
+    ),
   };
 
-  handleClick = () => {
-    this.props.onSignIn(this.state.email.trim(), this.state.password);
-  };
-  static getDerivedStateFromProps(props) {
-    if (props.loginIn != undefined) {
-      if (props.loginIn != false) NavigationService.navigate('Posts');
-    }
-    return null
+  componentDidMount(){
+    if (this.props.loginIn) NavigationService.navigate(POSTS);
   }
+
+  handleClick = values => {
+    this.props.onSignIn(values.email.trim(), values.password);
+  };
 
   render() {
     return (
       <View style={styles.container}>
-        <Input
-          style={styles.input}
-          onChangeText={email => this.setState({email})}
-          value={this.state.email}
-          placeholder={'Email'}
-        />
-        <Input
-          style={styles.input}
-          onChangeText={password => this.setState({password})}
-          secureTextEntry={true}
-          value={this.state.password}
-          placeholder={'Password'}
-        />
-        <Button
-          onPress={this.handleClick}
-          style={styles.button}
-          title="Sign In"
-        />
+        <Formik
+          initialValues={{email: '', password: ''}}
+          onSubmit={this.handleClick}>
+          {({values, handleChange, setFieldTouched, handleSubmit}) => (
+            <View style={styles.formContainer}>
+              <TextInput
+                style={styles.input}
+                value={values.email}
+                onChangeText={handleChange('email')}
+                onBlur={() => setFieldTouched('email')}
+                placeholder={i18n.t('LOGIN.EMAIL')}
+              />
+              <TextInput
+                style={styles.input}
+                value={values.password}
+                onChangeText={handleChange('password')}
+                placeholder={i18n.t('LOGIN.PASSWORD')}
+                onBlur={() => setFieldTouched('password')}
+                secureTextEntry={true}
+              />
+              <Button title={i18n.t('LOGIN.LOGIN')} onPress={handleSubmit} />
+            </View>
+          )}
+        </Formik>
       </View>
     );
   }
 }
-const mapStateToProps = state => {
-  return {
-    loginIn: state.users.loginIn,
-    user: state.users.user,
-  };
-};
-
-const mapDispatchToProps = dispatch => ({
-  onSignIn: (email, password) => {
-    dispatch(signIn(email, password));
-  },
+const mapStateToProps = state => ({
+  loginIn: state.users.loginIn,
+  user: state.users.user,
 });
 
+const mapDispatchToProps = dispatch => ({
+  onSignIn: (email, password) => dispatch(signIn(email, password)),
+});
 
 export default connect(
   mapStateToProps,

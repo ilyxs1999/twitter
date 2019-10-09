@@ -1,37 +1,39 @@
 import React from 'react';
-import {Avatar, CheckBox, Icon} from 'react-native-elements';
+import {Avatar} from 'react-native-elements';
 import {View, Image} from 'react-native';
 import {Text, Touchable} from '../components';
+import {styles} from './styles';
+import {get} from 'lodash';
+import {AVATAR} from '../constants/img';
+import {DEFAULT_USERNAME, DATE_FORMAT} from '../constants/values';
+import moment from 'moment';
 
-export function Comment(props) {
+
+export function Comment({comment, avatarOnPress}) {
   return (
-    <View
-      style={{borderBottomColor: '#6a717d', borderBottomWidth: 1, padding: 5}}>
-      <View style={{flexDirection: 'row'}}>
-        <View style={{flex: 1, alignItems: 'center', margin: 10}}>
-          <Avatar
-            size="small"
-            rounded
-            source={{uri: props.avatar}}
-            onPress={props.avatarOnPress}
-          />
-        </View>
-        <View style={{flex: 6, justifyContent: 'space-between'}}>
-          <Touchable onPress={props.avatarOnPress}>
-            <Text style={{color: 'blue'}}>{props.username}</Text>
-          </Touchable>
-          <Text>{props.commentText}</Text>
-          <Text>
-            `
-            {props.commentImage && (
-              <Image
-                style={{width: 200, height: 200}}
-                source={{uri: props.commentImage}}
-              />
-            )}
+    <View style={styles.commentContainer}>
+      <View style={styles.commentAvatar}>
+        <Avatar
+          size="small"
+          rounded
+          source={{uri: get(comment, 'user.avatarUri', AVATAR)}}
+          onPress={avatarOnPress}
+        />
+      </View>
+      <View style={styles.commentTextContainer}>
+        <Touchable onPress={avatarOnPress}>
+          <Text style={styles.commentUsernameText}>
+            {get(comment, 'user.username', DEFAULT_USERNAME)}
           </Text>
-          <Text>{props.commentTime}</Text>
-        </View>
+        </Touchable>
+        <Text style={styles.postTimeText}>{`${moment(comment.time).format(DATE_FORMAT)}`}</Text>
+        <Text style = {{marginBottom : 5}}>{comment.commentText}</Text>
+        <Text>
+          {comment.commentImage && (
+            <Image style={styles.image} source={{uri: comment.commentImage}} />
+          )}
+        </Text>
+        
       </View>
     </View>
   );

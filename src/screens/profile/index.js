@@ -1,19 +1,18 @@
 import React, {PureComponent} from 'react';
 import {View} from 'react-native';
-import {Text, Touchable} from '../../components';
 import {connect} from 'react-redux';
-import {ListItem, Avatar} from 'react-native-elements';
+import {ListItem, Avatar, Icon} from 'react-native-elements';
 import NavigationService from '../../services/NavigationService';
 import {styles} from './styles';
+import {get} from 'lodash';
+import {AVATAR} from '../../constants/img'
+import {DEFAULT_USERNAME, DEFAULT_EMAIL} from '../../constants/values'
+
 
 class Profile extends PureComponent {
   static navigationOptions = {
     headerLeft: (
-      <Touchable
-        onPress={() => NavigationService.pop(1)}
-        style={styles.backButton}>
-        <Text style={styles.backText}>{'<  Back'}</Text>
-      </Touchable>
+      <Icon name="arrow-back"  onPress={() => NavigationService.pop(1)} />
     ),
   };
   render() {
@@ -24,23 +23,17 @@ class Profile extends PureComponent {
           containerStyle={styles.avatar}
           size={200}
           rounded
-          source={{uri: user.avatarUri}}
+          source={{uri: get(user,'avatarUri',AVATAR)}}
         />
-        <ListItem title={user.username} bottomDivider />
-        <ListItem title={user.email} bottomDivider />
+        <ListItem title={get(user,'username',DEFAULT_USERNAME)} bottomDivider />
+        <ListItem title={get(user,'email',DEFAULT_EMAIL)} bottomDivider />
       </View>
     );
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    user: state.users.user,
-  };
-};
+const mapStateToProps = state => ({
+  user: state.users.user,
+});
 
-const mapDispatchToProps = dispatch => ({});
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Profile);
+export default connect(mapStateToProps)(Profile);

@@ -1,6 +1,9 @@
-export const LOADING = 'loading';
-export const CHAT = 'chat';
-export const USERS = 'users';
-export const LOGIN = 'login';
-export const CHATS = 'chats';
-export const VERIFY = 'verify';
+export const POSTS = 'Posts';
+export const ACCOUNT = 'Account';
+export const SETTINGS = 'Settings';
+export const PROFILE = 'Profile';
+export const COMMENTS = 'Comments';
+export const AUTH = 'Auth';
+export const SIGN_IN = 'SignIn';
+export const SIGN_UP = 'SignUp';
+export const LANGUAGES = 'Languages';

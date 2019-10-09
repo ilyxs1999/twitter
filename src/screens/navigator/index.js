@@ -1,6 +1,5 @@
 import {createAppContainer, createSwitchNavigator} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
-import App from '../index';
 import SignIn from '../signIn';
 import SignUp from '../signUp';
 import Posts from '../posts';
@@ -9,6 +8,7 @@ import Account from '../account';
 import Settings from '../settings';
 import Profile from '../profile';
 import Comments from '../comments';
+import Languages from "../languages"
 
 const AccountNavigator = createStackNavigator({
   Posts,
@@ -16,10 +16,10 @@ const AccountNavigator = createStackNavigator({
   Settings,
   Profile,
   Comments,
+  Languages
 });
 
 const AuthNavigator = createStackNavigator({
-  App,
   Auth,
   SignIn,
   SignUp,

@@ -1,3 +1,27 @@
 {
-
-}
+    "LOGIN": {
+      "LOGIN": "Login",
+      "REGISTER": "Register",
+      "USERNAME": "Username",
+      "EMAIL": "Email",
+      "PASSWORD": "Password",
+      "IS_VALID_PASSWORD" : "Is valid password",
+      "IS_VALID_EMAIL" : "Is valid email",
+      "IS_VALID_USERNAME" : "Is valid username",
+      "CHANGE_PASSWORD" : "Change password",
+      "LOG_OUT" : "Log out",
+      "SAVE" : "Save",
+      "BACK" : "Back"
+    },
+    "POSTS": {
+      "WRITE_YOUR_POST": "Write your post",
+      "SEND": "Send",
+      "LOAD_IMAGE": "Load image",
+      "MARKER" : "Marker",
+      "CLOSE" : "CLOSE",
+      "WRITE_YOUR_COMMENT" : "Write comment",
+      "COMMENTS" : "Comments"
+    },
+    "SUBMIT": "Submit",
+    "LANGUAGE" : "Language"
+  }

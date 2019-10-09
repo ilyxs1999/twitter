@@ -8,4 +8,14 @@ export const styles = StyleSheet.create({
     padding: 20,
     alignSelf: 'center',
   },
+  userInfo: {
+    padding: 20,
+  },
+  textInfo: {
+    fontSize: 18,
+  },
+  textContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
 });

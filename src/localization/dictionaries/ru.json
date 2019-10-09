@@ -1,3 +1,27 @@
 {
-    
+    "LOGIN": {
+        "LOGIN": "Войти",
+        "REGISTER": "Регистрация",
+        "USERNAME": "Имя пользователя",
+        "EMAIL": "Email",
+        "PASSWORD": "Пароль",
+        "IS_VALID_PASSWORD": "Не правильный пороль",
+        "IS_VALID_EMAIL": "Не правильный email",
+        "IS_VALID_USERNAME": "Не правильное имя пользователя",
+        "CHANGE_PASSWORD": "Изменить пороль",
+        "LOG_OUT": "Выйти",
+        "SAVE": "Сохранить",
+        "BACK": "Назад"
+    },
+    "POSTS": {
+        "WRITE_YOUR_POST": "Напиши свой пост",
+        "SEND": "Отправить",
+        "LOAD_IMAGE": "Картинка",
+        "MARKER": "Отметиться",
+        "CLOSE": "Закрыть",
+        "WRITE_YOUR_COMMENT": "Написать комментарий",
+        "COMMENTS": "Комментарии"
+    },
+    "SUBMIT": "Принять",
+    "LANGUAGE" : "Язык"
 }

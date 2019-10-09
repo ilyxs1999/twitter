@@ -1,40 +1,54 @@
 import React, {PureComponent} from 'react';
 import {View, Button} from '../../components';
 import NavigationService from '../../services/NavigationService';
-import {Image, StyleSheet} from 'react-native';
-import {styles} from './styles'
-export default class Auth extends PureComponent {
+import {Image} from 'react-native';
+import {styles} from './styles';
+import {connect} from 'react-redux';
+import {LOGO} from '../../constants/img';
+import i18n from '../../localization';
+import {SIGN_IN,SIGN_UP,POSTS} from "../../constants/routes"
+
+
+class Auth extends PureComponent {
   static navigationOptions = {
     header: null,
   };
+
+  componentDidMount() {
+    if (this.props.loginIn) this.props.navigation.navigate(POSTS);
+  }
+
+  navigate = name => () => {
+    NavigationService.navigate(name, {});
+  };
+
   render() {
     return (
       <View style={styles.container}>
         <Image
           style={styles.logo}
           source={{
-            uri:
-              'https://upload.wikimedia.org/wikipedia/ru/thumb/9/9f/Twitter_bird_logo_2012.svg/1024px-Twitter_bird_logo_2012.svg.png',
+            uri: LOGO,
           }}
         />
         <View>
           <Button
-            onPress={() => {
-              NavigationService.navigate('SignIn', {});
-            }}
+            onPress={this.navigate(SIGN_IN)}
             style={styles.button}
-            title="Sign in"
+            title={i18n.t('LOGIN.LOGIN')}
           />
           <Button
-            onPress={() => {
-              NavigationService.navigate('SignUp', {});
-            }}
+            onPress={this.navigate(SIGN_UP)}
             style={styles.button}
-            title="Sign up"
+            title={i18n.t('LOGIN.REGISTER')}
           />
-          
         </View>
       </View>
     );
   }
 }
+const mapStateToProps = state => ({
+  loginIn: state.users.loginIn,
+});
+
+export default connect(mapStateToProps)(Auth);

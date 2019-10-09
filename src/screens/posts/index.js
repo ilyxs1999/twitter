@@ -1,27 +1,61 @@
 import React from 'react';
-import {View, Touchable} from '../../components';
+import {View, Touchable, Text} from '../../components';
 import {Button} from '../../components';
-import {ScrollView, TextInput, StyleSheet, SafeAreaView} from 'react-native';
+import {TextInput, Image, SafeAreaView, FlatList} from 'react-native';
 import * as COLORS from '../../constants/colors';
-import {Icon, Card} from 'react-native-elements';
+import {Icon, CheckBox, Overlay, Tooltip} from 'react-native-elements';
 import NavigationService from '../../services/NavigationService';
 import {connect} from 'react-redux';
-import {sendPost, likePost} from '../../store/actions';
+import {sendPost, likePost, sendVoicePost} from '../../store/actions';
 import ImagePicker from 'react-native-image-picker';
-import {Post} from '../../components/post';
+import Post from '../../components/post';
 import {styles} from './styles';
-class Posts extends React.Component {
+import Geolocation from '@react-native-community/geolocation';
+import MapView, {Marker} from 'react-native-maps';
+import ids from 'shortid';
+import AudioRecorderPlayer from 'react-native-audio-recorder-player';
+import i18n from '../../localization';
+import {COMMENTS , ACCOUNT, SETTINGS} from "../../constants/routes"
+
+
+class Posts extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
       postText: '',
-      posts: props.posts,
       image: null,
+      location: null,
+      isVisible: false,
+      fullScreenImage: null,
+      isVisibleFullMap: false,
+      fullScreenMap: null,
+      checked: true,
+      path: '',
     };
-    this.scrollView = null;
+    this.audioRecorderPlayer = new AudioRecorderPlayer();
   }
+
+  static navigationOptions = {
+    headerLeft: (
+      <Icon
+        containerStyle={styles.headerIcon}
+        name="account-box"
+        color={COLORS.BLACK}
+        onPress={() => NavigationService.navigate(ACCOUNT)}
+      />
+    ),
+    headerRight: (
+      <Icon
+        containerStyle={styles.headerIcon}
+        name="settings"
+        color={COLORS.BLACK}
+        onPress={() => NavigationService.navigate(SETTINGS)}
+      />
+    ),
+  };
+
   chooseFile = () => {
-    var options = {
+    let options = {
       noData: true,
     };
     ImagePicker.launchImageLibrary(options, response => {
@@ -30,125 +64,166 @@ class Posts extends React.Component {
       }
     });
   };
-  navigation = screen => () => {
-    NavigationService.navigate(screen);
-  };
-  static navigationOptions = {
-    headerTitle: (
-      <Icon
-        name="account-box"
-        color={COLORS.BLACK}
-        onPress={() => NavigationService.navigate('Account')}
-      />
-    ),
-    headerRight: (
-      <Icon
-        name="settings"
-        color={COLORS.BLACK}
-        onPress={() => NavigationService.navigate('Settings')}
-      />
-    ),
+
+  getLocation = () => {
+    Geolocation.getCurrentPosition(location => {
+      const cords = {
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+        latitudeDelta: 1,
+        longitudeDelta: 1,
+      };
+      this.setState({location: cords});
+    });
   };
 
-  static getDerivedStateFromProps(props, state) {
-    if (state.posts.length < props.posts.length) {
-      const posts = props.posts;
-      return {posts};
+  openMap = location => () => {
+    this.setState({fullScreenMap: location, isVisibleFullMap: true});
+  };
+  closeMap = () => {
+    this.setState({fullScreenMap: null, isVisibleFullMap: false});
+  };
+
+  openImage = image => () => {
+    this.setState({fullScreenImage: image, isVisible: true});
+  };
+
+  closeImage = () => {
+    this.setState({fullScreenImage: null, isVisible: false});
+  };
+
+  handleCheckBox = async () => {
+    if (this.state.checked) {
+      await this.setState({path: `${ids.generate()}.m4a`});
+      this.onStartRecord();
+    } else {
+      this.onStopRecord();
+      await this.props.sendVoicePost(this.props.user, this.state.path);
     }
-    return null;
-  }
+    this.setState({checked: !this.state.checked});
+  };
 
-  getPosts = () => {
-    return this.props.posts.filter(
-      post => post.user.email == this.props.user.email,
-    );
+  onStartRecord = async () => {
+    await this.audioRecorderPlayer.startRecorder(this.state.path);
+    this.audioRecorderPlayer.addRecordBackListener();
   };
+
+  onStopRecord = async () => {
+    await this.audioRecorderPlayer.stopRecorder();
+    this.audioRecorderPlayer.removeRecordBackListener();
+  };
+
   sendPost = () => {
-    let postText = '';
-    const image = null;
-    this.props.sendPost(this.props.user, this.state.postText, this.state.image);
-    this.setState({postText, image});
+    this.props.sendPost(
+      this.props.user,
+      this.state.postText,
+      this.state.image,
+      this.state.location,
+    );
+
+    this.setState({postText: '', image: null, location: null});
   };
-  scrollToEnd = () => {
-    this.scrollView.scrollToEnd();
-  };
-  getTime = i => {
-    const date = new Date(this.state.posts[i].time);
-    return date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+
+  navigate = (name, params) => () => {
+    NavigationService.navigate(name, params);
   };
 
   render() {
     return (
-      <SafeAreaView style style={styles.container}>
-        <Card containerStyle={styles.card}>
-          <ScrollView
-            ref={scrollView => {
-              this.scrollView = scrollView;
-            }}
-            onContentSizeChange={(contentWidth, contentHeight) => {
-              this.scrollView.scrollToEnd({animated: true});
-            }}>
-            {this.state.posts.map((post, i) => {
-              return (
-                <Touchable
-                  onPress={() =>
-                    NavigationService.navigate('Comments', {post: post})
-                  }>
-                  <Post
-                    avatar={post.user.avatarUri}
-                    avatarOnPress={() =>
-                      NavigationService.navigate('Profile', {user: post.user})
-                    }
-                    username={post.user.username}
-                    postText={post.postText}
-                    postImage={post.image}
-                    postTime={this.getTime(i)}
-                  />
-                </Touchable>
-              );
-            })}
-          </ScrollView>
-        </Card>
-        <TextInput
-          style={styles.input}
-          value={this.state.postText}
-          onChangeText={postText => this.setState({postText})}
-          placeholder={'write your post'}
-          maxLength={240}
-          multiline={true}
-          scrollEnabled={true}
+      <SafeAreaView style={styles.container}>
+        <FlatList
+          extraData={this.props}
+          inverted={true}
+          style={styles.card}
+          onEndReached={this.loadData}
+          data={this.props.posts}
+          renderItem={({item}) => (
+            <Touchable onPress={this.navigate(COMMENTS, {post: item})}>
+              <Post
+                post={item}
+                postLocationOnPress={this.openMap(item.location)}
+                postImageOnPress={this.openImage(item.image)}
+                audioRecorderPlayer={this.audioRecorderPlayer}
+              />
+            </Touchable>
+          )}
+          keyExtractor={post => post.postId}
         />
+
+        {this.state.checked && (
+          <TextInput
+            style={styles.input}
+            value={this.state.postText}
+            onChangeText={postText => this.setState({postText})}
+            placeholder={i18n.t('POSTS.WRITE_YOUR_POST')}
+            maxLength={240}
+            multiline={true}
+            scrollEnabled={true}
+          />
+        )}
+
         <View style={styles.buttonGroup}>
+          <CheckBox
+            checkedIcon={<Icon name="mic-none" />}
+            uncheckedIcon={<Icon name="stop" />}
+            checked={this.state.checked}
+            onPress={this.handleCheckBox}
+            containerStyle={styles.recorder}
+          />
           <Button
-            onPress={() => this.sendPost()}
-            title={'send'}
+            onPress={this.sendPost}
+            title={i18n.t('POSTS.SEND')}
             style={styles.sendButton}
           />
-          <Button
-            onPress={() => this.chooseFile()}
-            title={'load image'}
-            style={styles.chooseButton}
-          />
+          <View style={styles.location}>
+            <Icon name={'my-location'} onPress={this.getLocation} />
+          </View>
+          <Tooltip
+            width={100}
+            containerStyle={styles.tooltip}
+            popover={
+              <Touchable onPress={this.chooseFile}>
+                <Text>{i18n.t('POSTS.LOAD_IMAGE')}</Text>
+              </Touchable>
+            }>
+            <Icon name={'attach-file'} />
+          </Tooltip>
         </View>
+        <Overlay fullScreen={true} isVisible={this.state.isVisible}>
+          <SafeAreaView style={styles.overlay}>
+            <Image
+              style={styles.fullScreenImage}
+              source={{uri: this.state.fullScreenImage}}
+            />
+            <Button onPress={this.closeImage} title={i18n.t('POSTS.CLOSE')} />
+          </SafeAreaView>
+        </Overlay>
+        <Overlay fullScreen={true} isVisible={this.state.isVisibleFullMap}>
+          <SafeAreaView style={styles.overlay}>
+            {this.state.fullScreenMap && (
+              <MapView
+                style={styles.overlay}
+                initialRegion={this.state.fullScreenMap}>
+                <Marker coordinate={this.state.fullScreenMap} />
+              </MapView>
+            )}
+            <Button onPress={this.closeMap} title={i18n.t('POSTS.CLOSE')} />
+          </SafeAreaView>
+        </Overlay>
       </SafeAreaView>
     );
   }
 }
-const mapStateToProps = state => {
-  return {
-    like: state.posts.like,
-    user: state.users.user,
-    posts: state.posts.posts,
-  };
-};
+const mapStateToProps = state => ({
+  user: state.users.user,
+  posts: state.posts.posts,
+});
 
 const mapDispatchToProps = dispatch => ({
-  sendPost: (user, postText, image) => {
-    dispatch(sendPost(user, postText, image));
-  },
-  likePost: (user, postText) => {
-    dispatch(likePost(user, postText));
-  },
+  sendPost: (user, postText, image, location) =>
+    dispatch(sendPost(user, postText, image, location)),
+  likePost: (user, postText) => dispatch(likePost(user, postText)),
+  sendVoicePost: (user, path) => dispatch(sendVoicePost(user, path)),
 });
 
 export default connect(
