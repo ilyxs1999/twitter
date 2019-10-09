@@ -72,7 +72,6 @@ class Account extends PureComponent {
   };
 
   render() {
-    string()
     return (
       <View style={styles.container}>
         <Avatar
