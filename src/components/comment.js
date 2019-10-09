@@ -26,14 +26,14 @@ export function Comment({comment, avatarOnPress}) {
             {get(comment, 'user.username', DEFAULT_USERNAME)}
           </Text>
         </Touchable>
-        <Text>{comment.commentText}</Text>
+        <Text style={styles.postTimeText}>{`${moment(comment.time).format(DATE_FORMAT)}`}</Text>
+        <Text style = {{marginBottom : 5}}>{comment.commentText}</Text>
         <Text>
-          `
           {comment.commentImage && (
             <Image style={styles.image} source={{uri: comment.commentImage}} />
           )}
         </Text>
-        <Text>{`${moment(comment.time).format(DATE_FORMAT)}`}</Text>
+        
       </View>
     </View>
   );

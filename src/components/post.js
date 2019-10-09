@@ -8,12 +8,11 @@ import MapView, {Marker} from 'react-native-maps';
 import {get} from 'lodash';
 import {AVATAR} from '../constants/img';
 import NavigationService from '../services/NavigationService';
-import  {DEFAULT_USERNAME, DATE_FORMAT} from '../constants/values';
+import {DEFAULT_USERNAME, DATE_FORMAT} from '../constants/values';
 import moment from 'moment';
 import VoicePlayer from './voicePlayer';
 import {connect} from 'react-redux';
 import {likePost} from '../store/actions';
-
 
 class Post extends React.Component {
   constructor(props) {
@@ -23,16 +22,16 @@ class Post extends React.Component {
     };
   }
 
-  componentDidMount(){
-    this.setState({liked : this.isLiked()})
+  componentDidMount() {
+    this.setState({liked: this.isLiked()});
   }
 
   isLiked = () => {
-    const usersLike = get(this.props,'post.usersLike', []);
+    const usersLike = get(this.props, 'post.usersLike', []);
     const likeIndex = usersLike.findIndex(item => {
       return item == this.props.user.id;
     });
-    return likeIndex != -1
+    return likeIndex != -1;
   };
 
   navigate = (name, params) => () => {
@@ -57,17 +56,26 @@ class Post extends React.Component {
               }}
               onPress={this.navigate('Profile', {user: this.props.post.user})}
             />
-            <Text style={styles.postUsername}>
-              {get(this.props.post, 'user.username', DEFAULT_USERNAME)}
-            </Text>
           </View>
 
           <View style={styles.postContentContainer}>
-            <Text>
-              {this.props.post.postText && <Text>{get(this.props.post,'postText',"indefinite")}</Text>}
+            <Text style={styles.postUsername}>
+              {get(this.props.post, 'user.username', DEFAULT_USERNAME)}
+            </Text>
+            <Text style={styles.postTimeText}>{`${moment(this.props.post.time,).format(DATE_FORMAT)}`}</Text>
+            <Text >
+              {this.props.post.postText && (
+               
+                <Text style={styles.postText}>{get(this.props.post, 'postText', 'indefinite')}</Text>
+                
+              )}
+              </Text>
               {this.props.post.image && (
                 <Touchable onPress={this.props.postImageOnPress}>
-                  <Image style={styles.image} source={{uri: this.props.post.image}} />
+                  <Image
+                    style={styles.image}
+                    source={{uri: this.props.post.image}}
+                  />
                 </Touchable>
               )}
               {this.props.post.location && (
@@ -78,29 +86,36 @@ class Post extends React.Component {
                   <Marker coordinate={this.props.post.location} />
                 </MapView>
               )}
-            </Text>
+           
             {this.props.post.path && (
               <VoicePlayer
                 audioRecorderPlayer={this.props.audioRecorderPlayer}
                 path={this.props.post.path}
               />
             )}
-            <View style={styles.postTimeContainer}>
-              <Text style={styles.postTimeText}>{`${moment(
-                this.props.post.time,
-              ).format(DATE_FORMAT)}`}</Text>
+            <View style={styles.postLikeContainer}>
+              <Text>{this.props.post.usersLike.length}</Text>
               <CheckBox
                 containerStyle={styles.postCheckbox}
                 uncheckedIcon={
-                  <Icon name="favorite-border" reverseColor="red" color="red" />
+                  <Icon
+                    size={20}
+                    name="favorite-border"
+                    reverseColor="red"
+                    color="red"
+                  />
                 }
                 checkedIcon={
-                  <Icon name="favorite" reverseColor="red" color="red" />
+                  <Icon
+                    size={20}
+                    name="favorite"
+                    reverseColor="red"
+                    color="red"
+                  />
                 }
                 checked={this.state.liked}
                 onPress={this.like}
               />
-              <Text>{this.props.post.usersLike.length}</Text>
             </View>
           </View>
         </View>

@@ -9,6 +9,9 @@ export const styles = StyleSheet.create({
     padding: 0,
     margin: 0,
   },
+  headerIcon : {
+    padding : 5
+  },
   input: {
     height: 80,
     justifyContent: 'flex-end',

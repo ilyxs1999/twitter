@@ -1,16 +1,13 @@
 import React, {PureComponent} from 'react';
 import {View, Text, Touchable, Button} from '../../components';
 import {Alert} from '../../components/overlay';
-import {Avatar, Icon} from 'react-native-elements';
+import {Avatar, Icon, ListItem, Divider} from 'react-native-elements';
 import ImagePicker from 'react-native-image-picker';
 import {connect} from 'react-redux';
 import {styles} from './styles';
 import * as values from '../../constants/values';
 import i18n from '../../localization';
-import {
-  logOut,
-  changeUserInfo
-} from '../../store/actions';
+import {logOut, changeUserInfo} from '../../store/actions';
 import NavigationService from '../../services/NavigationService';
 
 class Account extends PureComponent {
@@ -30,43 +27,46 @@ class Account extends PureComponent {
     };
     ImagePicker.launchImageLibrary(options, response => {
       if (response.uri) {
-        this.props.changeUserInfo(response.uri,values.TYPE_AVATAR_URI);
+        this.props.changeUserInfo(response.uri, values.TYPE_AVATAR_URI);
         this.setState({avatarUri: response.uri});
       }
     });
   };
 
-  logOut =  () => {
+  logOut = () => {
     this.props.logOut();
 
     NavigationService.navigate('Auth');
   };
 
   handleClick = type => () => {
-    this.setState({type ,overlayVisible: true});
+    this.setState({type, overlayVisible: true});
   };
 
   save = () => {
-    this.props.changeUserInfo(this.state.text,this.state.type)
-    
+    this.props.changeUserInfo(this.state.text, this.state.type);
+
     this.clean();
   };
 
-  close =  () => {
+  close = () => {
     this.clean();
   };
 
   clean = () => {
-    this.setState({text: '',overlayVisible: false});
+    this.setState({text: '', overlayVisible: false});
   };
 
-  handleChangeText =  text => {
+  handleChangeText = text => {
     this.setState({text});
   };
 
   static navigationOptions = {
     headerLeft: (
-      <Icon name="arrow-back"  onPress={() => NavigationService.reset('Posts')} />
+      <Icon
+        name="arrow-back"
+        onPress={() => NavigationService.reset('Posts')}
+      />
     ),
   };
 
@@ -85,23 +85,24 @@ class Account extends PureComponent {
           <Touchable
             style={styles.textContainer}
             onPress={this.handleClick(values.TYPE_USERNAME)}>
-            <Text style={styles.textInfo}>{`${i18n.t('LOGIN.USERNAME')}: ${this.props.user.username}`}</Text>
-            <Icon name="create" />
+            <Text style={styles.textInfo}>{`${i18n.t('LOGIN.USERNAME')}: ${this.props.user.username }`}</Text>
+            <Icon name="create" color='#a0a1a3'/>
           </Touchable>
+          <Divider style={{ marginBottom : 10, marginTop : 10}} />
           <Touchable
             style={styles.textContainer}
             onPress={this.handleClick(values.TYPE_EMAIL)}>
             <Text style={styles.textInfo}>{`${i18n.t('LOGIN.EMAIL')}: ${this.props.user.email}`}</Text>
-            <Icon name="create" />
+            <Icon name="create" color='#a0a1a3' />
           </Touchable>
+          <Divider style={{ marginBottom : 10, marginTop : 10}} />
           <Touchable
             style={styles.textContainer}
             onPress={this.handleClick(values.TYPE_PASSWORD)}>
-            <Text style={styles.textInfo}>{`${i18n.t(
-              'LOGIN.CHANGE_PASSWORD',
-            )}`}</Text>
-            <Icon name="create" />
+            <Text style={styles.textInfo}>{`${i18n.t('LOGIN.CHANGE_PASSWORD',)}`}</Text>
+            <Icon name="create" color='#a0a1a3' />
           </Touchable>
+          <Divider style={{ marginBottom : 10, marginTop : 10}} />
         </View>
         <Button title={i18n.t('LOGIN.LOG_OUT')} onPress={this.logOut} />
         <Alert
@@ -121,7 +122,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   logOut: () => dispatch(logOut()),
-  changeUserInfo: (text , userField) => dispatch(changeUserInfo(text , userField)),
+  changeUserInfo: (text, userField) =>
+    dispatch(changeUserInfo(text, userField)),
 });
 
 export default connect(

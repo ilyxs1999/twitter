@@ -1,7 +1,7 @@
 import React, {PureComponent} from 'react';
 import {View, Text, Touchable} from '../../components';
 import {styles} from './styles';
-import {Icon} from 'react-native-elements';
+import {Icon,ListItem} from 'react-native-elements';
 import {connect} from 'react-redux';
 import NavigationService from '../../services/NavigationService';
 import i18n from '../../localization';
@@ -21,9 +21,12 @@ class Settings extends PureComponent {
   render() {
     return (
       <View style={styles.container}>
-        <Touchable style={styles.separator} onPress={this.handle}>
-          <Text style={styles.text}>{i18n.t('LANGUAGE')}</Text>
-        </Touchable>
+        <ListItem
+        title={i18n.t('LANGUAGE')}
+        onPress={this.handle}
+        bottomDivider
+        chevron
+      />
       </View>
     );
   }

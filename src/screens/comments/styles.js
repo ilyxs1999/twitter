@@ -6,13 +6,6 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
     flex: 1,
   },
-  
-  backButton: {
-    padding: 10,
-  },
-  backText: {
-    fontSize: 18,
-  },
   input: {
     height: 80,
     padding: 10,

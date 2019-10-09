@@ -1,5 +1,6 @@
 import React from 'react';
-import {View, Text} from 'react-native';
+import {View} from 'react-native';
+import {Text} from "../components"
 import {CheckBox, Icon, Slider} from 'react-native-elements';
 import moment from 'moment';
 import { styles } from './styles';

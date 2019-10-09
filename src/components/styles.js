@@ -10,7 +10,7 @@ export const styles = StyleSheet.create({
   commentAvatar: {
     flex: 1,
     alignItems: 'center',
-    margin: 10,
+    marginTop: 5,
   },
   commentTextContainer: {
     flex: 6,
@@ -28,16 +28,16 @@ export const styles = StyleSheet.create({
     color: 'blue',
   },
   image: {
-    margin : 10,
-    width: 200,
-    height: 200,
+    height : 200,
+    marginTop : 5,
+    resizeMode : "contain",
+    marginBottom : 5
   },
   map: {
-    width: 200,
     height: 200,
   },
   overlayContainer: {
-    height: 200,
+    height: 120,
     width: 300,
     alignItems: 'center',
   },
@@ -52,35 +52,35 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     borderBottomColor: '#6a717d',
     borderBottomWidth: 1,
+    padding : 5
   },
   postAvatar: {
     alignItems: 'center',
     flex: 1,
-    padding: 5,
   },
   postUsername: {
-    marginTop: 10,
     color: 'blue',
   },
   postContentContainer: {
     flex: 4,
-    margin: 5,
-    padding: 5,
     flexDirection: 'column',
     justifyContent: 'space-between',
+    alignItems : "stretch"
   },
-  postTimeContainer: {
-    flexDirection: 'row',
+  postLikeContainer: {
+    
+    flexDirection : "row-reverse", marginTop : 5, alignItems : "center"
   },
   postTimeText: {
-    flex: 4,
-    textAlign: 'center',
-    alignSelf: 'flex-end',
+    fontSize : 10,
+    color : "#919090",
+    marginBottom : 5
   },
   postCheckbox: {
-    flex: 1,
-    padding: 0,
-    margin: 0,
-    alignSelf: 'flex-end',
+    padding : 0,
+    margin : 0
   },
+  postText : {
+    marginTop :5
+  }
 });

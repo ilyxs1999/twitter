@@ -6,9 +6,6 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  button: {
-    margin: 10,
-  },
   input: {
     padding : 3,
     margin: 10,

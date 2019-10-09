@@ -7,15 +7,7 @@ export const styles = StyleSheet.create({
   text : {
     alignSelf : "center",
     fontSize : 20,
-  },
-  separator : {
-    backgroundColor : "#d4d4d4",
-    height: 3,
-  },
-  backButton: {
-    padding: 10,
-  },
-  backText: {
-    fontSize: 18,
+    marginTop : 10,
+    marginBottom : 10
   },
 });

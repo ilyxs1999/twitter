@@ -16,13 +16,11 @@ import ids from 'shortid';
 import AudioRecorderPlayer from 'react-native-audio-recorder-player';
 import i18n from '../../localization';
 
-
-class Posts extends React.Component {
+class Posts extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
       postText: '',
-      posts: props.posts,
       image: null,
       location: null,
       isVisible: false,
@@ -36,8 +34,9 @@ class Posts extends React.Component {
   }
 
   static navigationOptions = {
-    headerTitle: (
+    headerLeft: (
       <Icon
+        containerStyle={styles.headerIcon}
         name="account-box"
         color={COLORS.BLACK}
         onPress={() => NavigationService.navigate('Account')}
@@ -45,6 +44,7 @@ class Posts extends React.Component {
     ),
     headerRight: (
       <Icon
+        containerStyle={styles.headerIcon}
         name="settings"
         color={COLORS.BLACK}
         onPress={() => NavigationService.navigate('Settings')}
@@ -90,13 +90,6 @@ class Posts extends React.Component {
     this.setState({fullScreenImage: null, isVisible: false});
   };
 
-  static getDerivedStateFromProps(props, state) {
-    if (state.posts.length < props.posts.length) {
-      const posts = props.posts;
-      return {posts};
-    }
-    return null;
-  }
   handleCheckBox = async () => {
     if (this.state.checked) {
       await this.setState({path: `${ids.generate()}.m4a`});
@@ -134,15 +127,14 @@ class Posts extends React.Component {
   };
 
   render() {
-    console.log(this.state.fullScreenMap)
     return (
-      <SafeAreaView style style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <FlatList
-          extraData={this.state}
+          extraData={this.props}
           inverted={true}
           style={styles.card}
           onEndReached={this.loadData}
-          data={this.state.posts}
+          data={this.props.posts}
           renderItem={({item}) => (
             <Touchable onPress={this.navigate('Comments', {post: item})}>
               <Post
@@ -206,11 +198,13 @@ class Posts extends React.Component {
         </Overlay>
         <Overlay fullScreen={true} isVisible={this.state.isVisibleFullMap}>
           <SafeAreaView style={styles.overlay}>
-            <MapView
-              style={styles.overlay}
-              initialRegion={this.state.fullScreenMap}>
-              <Marker coordinate={this.state.fullScreenMap} />
-            </MapView>
+            {this.state.fullScreenMap && (
+              <MapView
+                style={styles.overlay}
+                initialRegion={this.state.fullScreenMap}>
+                <Marker coordinate={this.state.fullScreenMap} />
+              </MapView>
+            )}
             <Button onPress={this.closeMap} title={i18n.t('POSTS.CLOSE')} />
           </SafeAreaView>
         </Overlay>

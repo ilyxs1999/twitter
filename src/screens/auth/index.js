@@ -13,7 +13,7 @@ class Auth extends PureComponent {
     header: null,
   };
 
-  componentWillMount() {
+  componentDidMount() {
     if (this.props.loginIn) this.props.navigation.navigate('Posts');
   }
 

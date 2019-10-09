@@ -1,10 +1,11 @@
 import React, {PureComponent} from 'react';
-import {FlatList, Text, SafeAreaView,AsyncStorage} from 'react-native';
-import {View, Touchable} from '../../components';
+import {FlatList, SafeAreaView,AsyncStorage} from 'react-native';
+import { Touchable,Text} from '../../components';
 import {styles} from './styles';
-import {Icon} from 'react-native-elements';
+import {Icon, Divider} from 'react-native-elements';
 import {connect} from 'react-redux';
 import NavigationService from '../../services/NavigationService';
+import {languages}  from "../../constants/languages"
 
 
 
@@ -15,41 +16,25 @@ class Languages extends PureComponent {
       <Icon name="arrow-back"  onPress={() => NavigationService.pop(1)} />
     ),
   };
-  componentWillMount () {
- 
-  }
 
   handle = (flag)=> () => {
     AsyncStorage.setItem("language",flag)
 
   };
 
-  data = [
-    {
-      title: 'Русский',
-      flag: 'ru',
-    },
-    {
-      title: 'English',
-      flag: 'en',
-    },
-  ];
-
   render() {
-      
     return (
       <SafeAreaView style={styles.container}>
         <FlatList
-          data={this.data}
+          data={languages}
           renderItem={({item}) => (
             <Touchable onPress={this.handle(item.flag)}>
               <Text style={styles.text}>{item.title}</Text>
-              <View style={styles.separator} />
+              <Divider/>
             </Touchable>
           )}
           keyExtractor={item => item.flag}
         />
-        
       </SafeAreaView>
     );
   }
