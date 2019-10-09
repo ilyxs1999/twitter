@@ -7,6 +7,7 @@ import NavigationService from '../../services/NavigationService';
 import i18n from '../../localization';
 import {LANGUAGES} from "../../constants/routes"
 
+
 class Settings extends PureComponent {
   static navigationOptions = {
     headerLeft: (
