@@ -8,6 +8,7 @@ import {styles} from './styles';
 import i18n from '../../localization';
 import {Formik} from 'formik';
 import {TextInput} from 'react-native';
+import {POSTS} from "../../constants/routes"
 
 
 class SignIn extends PureComponent {
@@ -17,9 +18,8 @@ class SignIn extends PureComponent {
     ),
   };
 
-  static getDerivedStateFromProps(props) {
-    if (props.loginIn != false) NavigationService.navigate('Posts');
-    return null;
+  componentDidMount(){
+    if (this.props.loginIn) NavigationService.navigate(POSTS);
   }
 
   handleClick = values => {

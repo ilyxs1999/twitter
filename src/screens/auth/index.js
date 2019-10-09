@@ -6,6 +6,7 @@ import {styles} from './styles';
 import {connect} from 'react-redux';
 import {LOGO} from '../../constants/img';
 import i18n from '../../localization';
+import {SIGN_IN,SIGN_UP,POSTS} from "../../constants/routes"
 
 
 class Auth extends PureComponent {
@@ -14,7 +15,7 @@ class Auth extends PureComponent {
   };
 
   componentDidMount() {
-    if (this.props.loginIn) this.props.navigation.navigate('Posts');
+    if (this.props.loginIn) this.props.navigation.navigate(POSTS);
   }
 
   navigate = name => () => {
@@ -32,12 +33,12 @@ class Auth extends PureComponent {
         />
         <View>
           <Button
-            onPress={this.navigate('SignIn')}
+            onPress={this.navigate(SIGN_IN)}
             style={styles.button}
             title={i18n.t('LOGIN.LOGIN')}
           />
           <Button
-            onPress={this.navigate('SignUp')}
+            onPress={this.navigate(SIGN_UP)}
             style={styles.button}
             title={i18n.t('LOGIN.REGISTER')}
           />

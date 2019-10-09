@@ -9,6 +9,8 @@ import * as values from '../../constants/values';
 import i18n from '../../localization';
 import {logOut, changeUserInfo} from '../../store/actions';
 import NavigationService from '../../services/NavigationService';
+import {POSTS,AUTH} from "../../constants/routes"
+
 
 class Account extends PureComponent {
   constructor(props) {
@@ -36,7 +38,7 @@ class Account extends PureComponent {
   logOut = () => {
     this.props.logOut();
 
-    NavigationService.navigate('Auth');
+    NavigationService.navigate(AUTH);
   };
 
   handleClick = type => () => {
@@ -65,7 +67,7 @@ class Account extends PureComponent {
     headerLeft: (
       <Icon
         name="arrow-back"
-        onPress={() => NavigationService.reset('Posts')}
+        onPress={() => NavigationService.reset(POSTS)}
       />
     ),
   };

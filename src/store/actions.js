@@ -2,6 +2,9 @@ import * as types from './types';
 import ids from 'shortid';
 import {AVATAR} from '../constants/img';
 import {createAction} from 'redux-actions';
+import NavigationService from '../services/NavigationService';
+import {AUTH, POSTS} from "../constants/routes"
+
 
 const setUserAction = createAction(types.SET_USER);
 const setLoginFlag = createAction(types.SET_LOGIN_FLAG);
@@ -22,6 +25,7 @@ export const signUp = (username, email, password) => (dispatch, getState) => {
     avatarUri: AVATAR,
   };
   dispatch(setUsersAction([...users,newUser]));
+  NavigationService.navigate(AUTH, {});
 };
 
 export const signIn = (email, password) => (dispatch, getState) => {
@@ -32,6 +36,7 @@ export const signIn = (email, password) => (dispatch, getState) => {
   if (index != -1) {
     dispatch(setUserAction(users[index]));
     dispatch(setLoginFlag(true));
+    NavigationService.navigate(POSTS);
   }
 };
 
@@ -73,7 +78,7 @@ export const likePost = (id, postId) => (dispatch, getState) => {
     return item == id;
   });
   if (likeIndex == -1) {
-    posts[index].usersLike = posts[index].usersLike.concat(id);
+    posts[index].usersLike = [...posts[index].usersLike, id];
   } else {
     posts[index].usersLike.splice(likeIndex, 1);
   }
@@ -118,7 +123,7 @@ export const addComment = (post, commentText, user, image) => (
   const index = posts.findIndex(item => {
     return item.postId == post.postId;
   });
-  posts[index].comments = posts[index].comments.concat(comment);
+  posts[index].comments = [...posts[index].comments,comment];
   dispatch(addCommentAction(posts));
 };
 

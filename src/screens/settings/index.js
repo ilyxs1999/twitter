@@ -5,7 +5,7 @@ import {Icon,ListItem} from 'react-native-elements';
 import {connect} from 'react-redux';
 import NavigationService from '../../services/NavigationService';
 import i18n from '../../localization';
-
+import {LANGUAGES} from "../../constants/routes"
 
 class Settings extends PureComponent {
   static navigationOptions = {
@@ -15,7 +15,7 @@ class Settings extends PureComponent {
   };
 
   handle = () => {
-    NavigationService.navigate('Languages');
+    NavigationService.navigate(LANGUAGES);
   };
 
   render() {

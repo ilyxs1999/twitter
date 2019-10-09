@@ -20,7 +20,6 @@ class SignUp extends PureComponent {
 
   onSubmit = values => {
     this.props.onSignUp(values.username, values.email, values.password);
-    NavigationService.navigate('Auth', {});
   };
 
   render() {

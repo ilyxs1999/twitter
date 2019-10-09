@@ -12,6 +12,8 @@ import {styles} from './styles';
 import AudioRecorderPlayer from 'react-native-audio-recorder-player';
 import i18n from '../../localization';
 import {Icon} from 'react-native-elements';
+import {POSTS, PROFILE} from "../../constants/routes"
+
 
 class Comments extends PureComponent {
   constructor(props) {
@@ -27,7 +29,7 @@ class Comments extends PureComponent {
     headerLeft: (
       <Icon
         name="arrow-back"
-        onPress={() => NavigationService.reset('Posts')}
+        onPress={() => NavigationService.reset(POSTS)}
       />
     ),
   };
@@ -76,7 +78,7 @@ class Comments extends PureComponent {
             <Comment
               comment={comment}
               avatarOnPress={() =>
-                NavigationService.navigate('Profile', {user: comment.user})
+                this.navigate(PROFILE, {user: comment.user})
               }
             />
           ))}

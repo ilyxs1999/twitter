@@ -15,6 +15,8 @@ import MapView, {Marker} from 'react-native-maps';
 import ids from 'shortid';
 import AudioRecorderPlayer from 'react-native-audio-recorder-player';
 import i18n from '../../localization';
+import {COMMENTS , ACCOUNT, SETTINGS} from "../../constants/routes"
+
 
 class Posts extends React.PureComponent {
   constructor(props) {
@@ -39,7 +41,7 @@ class Posts extends React.PureComponent {
         containerStyle={styles.headerIcon}
         name="account-box"
         color={COLORS.BLACK}
-        onPress={() => NavigationService.navigate('Account')}
+        onPress={() => NavigationService.navigate(ACCOUNT)}
       />
     ),
     headerRight: (
@@ -47,7 +49,7 @@ class Posts extends React.PureComponent {
         containerStyle={styles.headerIcon}
         name="settings"
         color={COLORS.BLACK}
-        onPress={() => NavigationService.navigate('Settings')}
+        onPress={() => NavigationService.navigate(SETTINGS)}
       />
     ),
   };
@@ -136,7 +138,7 @@ class Posts extends React.PureComponent {
           onEndReached={this.loadData}
           data={this.props.posts}
           renderItem={({item}) => (
-            <Touchable onPress={this.navigate('Comments', {post: item})}>
+            <Touchable onPress={this.navigate(COMMENTS, {post: item})}>
               <Post
                 post={item}
                 postLocationOnPress={this.openMap(item.location)}
@@ -177,7 +179,7 @@ class Posts extends React.PureComponent {
             <Icon name={'my-location'} onPress={this.getLocation} />
           </View>
           <Tooltip
-            width={80}
+            width={100}
             containerStyle={styles.tooltip}
             popover={
               <Touchable onPress={this.chooseFile}>
