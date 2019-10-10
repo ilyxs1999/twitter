@@ -11,7 +11,10 @@
       "CHANGE_PASSWORD" : "Change password",
       "LOG_OUT" : "Log out",
       "SAVE" : "Save",
-      "BACK" : "Back"
+      "BACK" : "Back",
+      "GENDER" : "Gender",
+      "male" : "male",
+      "female" : "female"
     },
     "POSTS": {
       "WRITE_YOUR_POST": "Write your post",

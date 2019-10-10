@@ -1,6 +1,6 @@
 import React, {PureComponent} from 'react';
 import {View, Text, Touchable, Button} from '../../components';
-import {Alert} from '../../components/overlay';
+import Alert from '../../components/overlay';
 import {Avatar, Icon, ListItem, Divider} from 'react-native-elements';
 import ImagePicker from 'react-native-image-picker';
 import {connect} from 'react-redux';
@@ -17,7 +17,7 @@ class Account extends PureComponent {
     this.state = {
       type: null,
       text: '',
-      avatarUri: this.props.user.avatarUri,
+      picture: this.props.user.picture,
       overlayVisible: false,
     };
   }
@@ -28,8 +28,8 @@ class Account extends PureComponent {
     };
     ImagePicker.launchImageLibrary(options, response => {
       if (response.uri) {
-        this.props.changeUserInfo(response.uri, values.TYPE_AVATAR_URI);
-        this.setState({avatarUri: response.uri});
+        this.props.changeUserInfo(response.uri, values.TYPE_PICTURE);
+        this.setState({picture: response.uri});
       }
     });
   };
@@ -58,10 +58,6 @@ class Account extends PureComponent {
     this.setState({text: '', overlayVisible: false});
   };
 
-  handleChangeText = text => {
-    this.setState({text});
-  };
-
   static navigationOptions = {
     headerLeft: (
       <Icon
@@ -78,7 +74,7 @@ class Account extends PureComponent {
           containerStyle={styles.avatar}
           size={200}
           rounded
-          source={{uri: this.state.avatarUri}}
+          source={{uri: this.state.picture}}
           onPress={this.chooseFile}
           showEditButton
         />
@@ -98,6 +94,11 @@ class Account extends PureComponent {
           </Touchable>
           <Divider style={{ marginBottom : 10, marginTop : 10}} />
           <Touchable
+            style={styles.textContainer}>
+            <Text style={styles.textInfo}>{`${i18n.t('LOGIN.GENDER')}: ${i18n.t(`LOGIN.${this.props.user.gender}`)}`}</Text>
+          </Touchable>
+          <Divider style={{ marginBottom : 10, marginTop : 10}} />
+          <Touchable
             style={styles.textContainer}
             onPress={this.handleClick(values.TYPE_PASSWORD)}>
             <Text style={styles.textInfo}>{`${i18n.t('LOGIN.CHANGE_PASSWORD',)}`}</Text>
@@ -108,8 +109,6 @@ class Account extends PureComponent {
         <Button title={i18n.t('LOGIN.LOG_OUT')} onPress={this.logOut} />
         <Alert
           isVisible={this.state.overlayVisible}
-          value={this.state.text}
-          onChangeText={this.handleChangeText}
           saveFunc={this.save}
           back={this.close}
         />

@@ -188,6 +188,7 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-share')
     implementation project(':react-native-sound-recorder')
     implementation project(':react-native-audio-recorder-player')
     implementation fileTree(dir: "libs", include: ["*.jar"])

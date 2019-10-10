@@ -3,13 +3,7 @@ import * as types from '../types';
 const initialState = {
   loginIn: false,
   users: [],
-  user: {
-    id: null,
-    username: null,
-    email: null,
-    password: null,
-    avatarUri: null,
-  },
+  user: {},
 };
 
 export default function users(state = initialState, action) {

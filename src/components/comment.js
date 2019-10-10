@@ -16,7 +16,7 @@ export function Comment({comment, avatarOnPress}) {
         <Avatar
           size="small"
           rounded
-          source={{uri: get(comment, 'user.avatarUri', AVATAR)}}
+          source={{uri: get(comment, 'user.picture', AVATAR)}}
           onPress={avatarOnPress}
         />
       </View>

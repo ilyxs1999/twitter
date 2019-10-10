@@ -129,6 +129,7 @@ class Posts extends React.PureComponent {
   };
 
   render() {
+    
     return (
       <SafeAreaView style={styles.container}>
         <FlatList

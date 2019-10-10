@@ -3,8 +3,8 @@ import ids from 'shortid';
 import {AVATAR} from '../constants/img';
 import {createAction} from 'redux-actions';
 import NavigationService from '../services/NavigationService';
-import {AUTH, POSTS} from "../constants/routes"
-
+import {AUTH, POSTS} from '../constants/routes';
+import axios from 'axios';
 
 const setUserAction = createAction(types.SET_USER);
 const setLoginFlag = createAction(types.SET_LOGIN_FLAG);
@@ -15,29 +15,47 @@ const addCommentAction = createAction(types.ADD_COMMENT);
 const removeUserAction = createAction(types.REMOVE_USER);
 const setUsersAction = createAction(types.SET_USERS);
 
-export const signUp = (username, email, password) => (dispatch, getState) => {
-  const {users} = getState().users
-  const newUser = {
-    id: ids.generate(),
-    username: username,
-    email: email,
-    password: password,
-    avatarUri: AVATAR,
-  };
-  dispatch(setUsersAction([...users,newUser]));
-  NavigationService.navigate(AUTH, {});
+export const api = axios.create({
+  baseURL: 'https://41363b08.ngrok.io',
+  timeout: 15000,
+});
+
+export const signUp = (username, email, password, gender) => (dispatch, getState) => {
+  api
+    .post('/api/user', {
+      username: username,
+      email: email,
+      password: password,
+      gender: gender,
+      picture : AVATAR
+    })
+    .then(function(response) {
+      if (response.status == 200) {
+        const {users} = getState().users;
+        dispatch(setUsersAction([...users, response.data]));
+        NavigationService.navigate(AUTH, {});
+      }
+    })
+    .catch(function(error) {
+      console.log(error);
+    });
 };
 
 export const signIn = (email, password) => (dispatch, getState) => {
-  const {users} = getState().users;
-  const index = users.findIndex(user => {
-    return user.email == email && user.password == password;
-  });
-  if (index != -1) {
-    dispatch(setUserAction(users[index]));
+  api
+  .post('/api/sign', {
+    email: email,
+    password: password,
+  })
+  .then(function(response) {
+    const {user} = response.data
+    dispatch(setUserAction(user));
     dispatch(setLoginFlag(true));
     NavigationService.navigate(POSTS);
-  }
+  })
+  .catch(function(error) {
+    alert("login error")
+  });
 };
 
 export const sendVoicePost = (user, path) => dispatch => {
@@ -69,16 +87,16 @@ export const sendPost = (user, postText, image, location) => dispatch => {
   };
   dispatch(sendPostAction(post));
 };
-export const likePost = (id, postId) => (dispatch, getState) => {
+export const likePost = (_id, postId) => (dispatch, getState) => {
   let {posts} = getState().posts;
   const index = posts.findIndex(item => {
     return item.postId == postId;
   });
   const likeIndex = posts[index].usersLike.findIndex(item => {
-    return item == id;
+    return item == _id;
   });
   if (likeIndex == -1) {
-    posts[index].usersLike = [...posts[index].usersLike, id];
+    posts[index].usersLike = [...posts[index].usersLike, _id];
   } else {
     posts[index].usersLike.splice(likeIndex, 1);
   }
@@ -90,14 +108,14 @@ export const logOut = () => dispatch => {
   dispatch(removeUserAction());
 };
 
-export const changeUserInfo = (text,userField) => (dispatch,getState)=> {
+export const changeUserInfo = (text, userField) => (dispatch, getState) => {
   let {users, user} = getState().users;
   let newUser = {
     ...user,
     [userField]: text,
   };
   let index = users.findIndex(item => {
-    return item.id == user.id;
+    return item._id == user._id;
   });
   if (index != -1) {
     users[index] = newUser;
@@ -106,7 +124,7 @@ export const changeUserInfo = (text,userField) => (dispatch,getState)=> {
   } else {
     alert('error');
   }
-}
+};
 
 export const addComment = (post, commentText, user, image) => (
   dispatch,
@@ -123,7 +141,7 @@ export const addComment = (post, commentText, user, image) => (
   const index = posts.findIndex(item => {
     return item.postId == post.postId;
   });
-  posts[index].comments = [...posts[index].comments,comment];
+  posts[index].comments = [...posts[index].comments, comment];
   dispatch(addCommentAction(posts));
 };
 

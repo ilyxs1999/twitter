@@ -13,6 +13,8 @@ import moment from 'moment';
 import VoicePlayer from './voicePlayer';
 import {connect} from 'react-redux';
 import {likePost} from '../store/actions';
+import Share from 'react-native-share';
+
 
 class Post extends React.Component {
   constructor(props) {
@@ -43,6 +45,19 @@ class Post extends React.Component {
     this.props.likePost(this.props.user.id, this.props.post.postId);
   };
 
+  shareOptions = {
+    title: 'Share via',
+    message: this.props.post.postText || '',
+    url: this.props.post.image,
+    email: 'vip.ilya123@mail.ru',
+  };
+
+  share = () => {
+    Share.open(this.shareOptions).catch(error => {
+      throw error;
+    });
+  };
+
   render() {
     return (
       <View>
@@ -52,7 +67,7 @@ class Post extends React.Component {
               size="medium"
               rounded
               source={{
-                uri: get(this.props.post, 'user.avatarUri', AVATAR),
+                uri: get(this.props.post, 'user.picture', AVATAR),
               }}
               onPress={this.navigate('Profile', {user: this.props.post.user})}
             />
@@ -62,31 +77,33 @@ class Post extends React.Component {
             <Text style={styles.postUsername}>
               {get(this.props.post, 'user.username', DEFAULT_USERNAME)}
             </Text>
-            <Text style={styles.postTimeText}>{`${moment(this.props.post.time,).format(DATE_FORMAT)}`}</Text>
-            <Text >
+            <Text style={styles.postTimeText}>{`${moment(
+              this.props.post.time,
+            ).format(DATE_FORMAT)}`}</Text>
+            <Text>
               {this.props.post.postText && (
-               
-                <Text style={styles.postText}>{get(this.props.post, 'postText', 'indefinite')}</Text>
-                
+                <Text style={styles.postText}>
+                  {get(this.props.post, 'postText', 'indefinite')}
+                </Text>
               )}
-              </Text>
-              {this.props.post.image && (
-                <Touchable onPress={this.props.postImageOnPress}>
-                  <Image
-                    style={styles.image}
-                    source={{uri: this.props.post.image}}
-                  />
-                </Touchable>
-              )}
-              {this.props.post.location && (
-                <MapView
-                  style={styles.map}
-                  onPress={this.props.postLocationOnPress}
-                  initialRegion={this.props.post.location}>
-                  <Marker coordinate={this.props.post.location} />
-                </MapView>
-              )}
-           
+            </Text>
+            {this.props.post.image && (
+              <Touchable onPress={this.props.postImageOnPress}>
+                <Image
+                  style={styles.image}
+                  source={{uri: this.props.post.image}}
+                />
+              </Touchable>
+            )}
+            {this.props.post.location && (
+              <MapView
+                style={styles.map}
+                onPress={this.props.postLocationOnPress}
+                initialRegion={this.props.post.location}>
+                <Marker coordinate={this.props.post.location} />
+              </MapView>
+            )}
+
             {this.props.post.path && (
               <VoicePlayer
                 audioRecorderPlayer={this.props.audioRecorderPlayer}
@@ -116,6 +133,7 @@ class Post extends React.Component {
                 checked={this.state.liked}
                 onPress={this.like}
               />
+              <Icon onPress={this.share} size={20} name="share" />
             </View>
           </View>
         </View>

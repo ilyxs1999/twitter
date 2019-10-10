@@ -23,7 +23,7 @@ class Profile extends PureComponent {
           containerStyle={styles.avatar}
           size={200}
           rounded
-          source={{uri: get(user,'avatarUri',AVATAR)}}
+          source={{uri: get(user,'picture',AVATAR)}}
         />
         <ListItem title={get(user,'username',DEFAULT_USERNAME)} bottomDivider />
         <ListItem title={get(user,'email',DEFAULT_EMAIL)} bottomDivider />

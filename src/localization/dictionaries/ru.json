@@ -11,7 +11,10 @@
         "CHANGE_PASSWORD": "Изменить пороль",
         "LOG_OUT": "Выйти",
         "SAVE": "Сохранить",
-        "BACK": "Назад"
+        "BACK": "Назад",
+        "GENDER": "Пол",
+        "male": "мужской",
+        "female": "женский"
     },
     "POSTS": {
         "WRITE_YOUR_POST": "Напиши свой пост",
@@ -23,5 +26,5 @@
         "COMMENTS": "Комментарии"
     },
     "SUBMIT": "Принять",
-    "LANGUAGE" : "Язык"
+    "LANGUAGE": "Язык"
 }
