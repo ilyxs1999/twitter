@@ -44,3 +44,17 @@ export default class Alert extends React.Component {
     );
   }
 }
+const mapStateToProps = state => ({
+  user: state.users.user,
+});
+
+const mapDispatchToProps = dispatch => ({
+  logOut: () => dispatch(logOut()),
+  changeUserInfo: (text, userField) =>
+    dispatch(changeUserInfo(text, userField)),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Account);

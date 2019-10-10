@@ -109,6 +109,7 @@ class Account extends PureComponent {
         <Button title={i18n.t('LOGIN.LOG_OUT')} onPress={this.logOut} />
         <Alert
           isVisible={this.state.overlayVisible}
+          type = {this.state.type}
           saveFunc={this.save}
           back={this.close}
         />
