@@ -33,7 +33,7 @@ class Settings extends PureComponent {
   }
 }
 const mapStateToProps = state => ({
-  user: state.users.user,
+  user: state.user.user,
 });
 
 export default connect(mapStateToProps)(Settings);

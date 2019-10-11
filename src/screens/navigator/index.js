@@ -1,7 +1,7 @@
 import {createAppContainer, createSwitchNavigator} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
-import SignIn from '../signIn';
-import SignUp from '../signUp';
+import Login from '../login';
+import Register from '../register';
 import Posts from '../posts';
 import Auth from '../auth';
 import Account from '../account';
@@ -21,8 +21,8 @@ const AccountNavigator = createStackNavigator({
 
 const AuthNavigator = createStackNavigator({
   Auth,
-  SignIn,
-  SignUp,
+  Login,
+  Register,
 });
 
 const AppNavigator = createSwitchNavigator({

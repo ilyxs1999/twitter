@@ -1,5 +1,4 @@
 import {NavigationActions, StackActions} from 'react-navigation';
-import {func} from 'prop-types';
 
 let _navigator;
 

@@ -1,9 +1,0 @@
-export const SEND_POST = 'SEND_POST';
-export const LIKE_POST = 'LIKE_POST';
-export const ADD_COMMENT = 'ADD_COMMENT';
-export const SEND_VOICE_POST = "SEND_VOICE_POST"
-export const SET_LANGUAGE = "SET_LANGUAGE"
-export const SET_USER = "SET_USER"
-export const SET_USERS = "SET_USERS"
-export const SET_LOGIN_FLAG = "SET_LOGIN_FLAG"
-export const REMOVE_USER = "REMOVE_USER"

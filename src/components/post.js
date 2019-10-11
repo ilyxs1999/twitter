@@ -12,7 +12,7 @@ import {DEFAULT_USERNAME, DATE_FORMAT} from '../constants/values';
 import moment from 'moment';
 import VoicePlayer from './voicePlayer';
 import {connect} from 'react-redux';
-import {likePost} from '../store/actions';
+import {likePost} from '../store/posts/actions';
 import Share from 'react-native-share';
 
 
@@ -31,7 +31,7 @@ class Post extends React.Component {
   isLiked = () => {
     const usersLike = get(this.props, 'post.usersLike', []);
     const likeIndex = usersLike.findIndex(item => {
-      return item == this.props.user.id;
+      return item == this.props.user._id;
     });
     return likeIndex != -1;
   };
@@ -42,7 +42,7 @@ class Post extends React.Component {
 
   like = () => {
     this.setState({liked: !this.state.liked});
-    this.props.likePost(this.props.user.id, this.props.post.postId);
+    this.props.likePost(this.props.user._id, this.props.post.postId);
   };
 
   shareOptions = {
@@ -142,11 +142,11 @@ class Post extends React.Component {
   }
 }
 const mapStateToProps = state => ({
-  user: state.users.user,
+  user: state.user.user,
 });
 
 const mapDispatchToProps = dispatch => ({
-  likePost: (id, postId) => dispatch(likePost(id, postId)),
+  likePost: (_id, postId) => dispatch(likePost(_id, postId)),
 });
 
 export default connect(

@@ -6,7 +6,7 @@ import {ListItem} from 'react-native-elements';
 import NavigationService from '../../services/NavigationService';
 import Post from '../../components/post';
 import {Comment} from '../../components/comment';
-import {addComment} from '../../store/actions';
+import {addComment} from '../../store/posts/actions';
 import ImagePicker from 'react-native-image-picker';
 import {styles} from './styles';
 import AudioRecorderPlayer from 'react-native-audio-recorder-player';
@@ -52,11 +52,7 @@ class Comments extends PureComponent {
 
   handleCommentChange = commentText => {
     this.setState({commentText});
-  };
-
-  navigate = (name, params) => () => {
-    NavigationService.navigate(name, params);
-  };
+  };;
 
   render() {
     const post = this.props.navigation.getParam('post');
@@ -77,9 +73,6 @@ class Comments extends PureComponent {
           {post.comments.map(comment => (
             <Comment
               comment={comment}
-              avatarOnPress={() =>
-                this.navigate(PROFILE, {user: comment.user})
-              }
             />
           ))}
         </ScrollView>
@@ -113,7 +106,7 @@ class Comments extends PureComponent {
   }
 }
 const mapStateToProps = state => ({
-  user: state.users.user,
+  user: state.user.user,
 });
 
 const mapDispatchToProps = dispatch => ({

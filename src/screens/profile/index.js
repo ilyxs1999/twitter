@@ -27,13 +27,14 @@ class Profile extends PureComponent {
         />
         <ListItem title={get(user,'username',DEFAULT_USERNAME)} bottomDivider />
         <ListItem title={get(user,'email',DEFAULT_EMAIL)} bottomDivider />
+        <ListItem title={get(user,'gender',DEFAULT_USERNAME)} bottomDivider />
       </View>
     );
   }
 }
 
 const mapStateToProps = state => ({
-  user: state.users.user,
+  user: state.user.user,
 });
 
 export default connect(mapStateToProps)(Profile);

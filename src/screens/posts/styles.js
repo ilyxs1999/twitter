@@ -37,8 +37,8 @@ export const styles = StyleSheet.create({
   buttonGroup: {
     height: 40,
     flexDirection: 'row',
-    justifyContent : "space-between"
-    
+    justifyContent : "space-between",
+    marginBottom : 5
   },
   tooltip : {
     backgroundColor: 'white',

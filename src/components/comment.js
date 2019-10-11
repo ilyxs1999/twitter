@@ -7,9 +7,12 @@ import {get} from 'lodash';
 import {AVATAR} from '../constants/img';
 import {DEFAULT_USERNAME, DATE_FORMAT} from '../constants/values';
 import moment from 'moment';
+import NavigationService from '../services/NavigationService';
+import {PROFILE} from "../constants/routes"
 
 
-export function Comment({comment, avatarOnPress}) {
+export function Comment({comment}) {
+  console.log(comment)
   return (
     <View style={styles.commentContainer}>
       <View style={styles.commentAvatar}>
@@ -17,11 +20,11 @@ export function Comment({comment, avatarOnPress}) {
           size="small"
           rounded
           source={{uri: get(comment, 'user.picture', AVATAR)}}
-          onPress={avatarOnPress}
+          onPress={()=> NavigationService.navigate(PROFILE, {user: comment.user})}
         />
       </View>
       <View style={styles.commentTextContainer}>
-        <Touchable onPress={avatarOnPress}>
+        <Touchable onPress={()=> NavigationService.navigate(PROFILE, {user: comment.user})}>
           <Text style={styles.commentUsernameText}>
             {get(comment, 'user.username', DEFAULT_USERNAME)}
           </Text>

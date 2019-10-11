@@ -7,9 +7,12 @@ import {connect} from 'react-redux';
 import {styles} from './styles';
 import * as values from '../../constants/values';
 import i18n from '../../localization';
-import {logOut, changeUserInfo} from '../../store/actions';
+import {changeUserInfo} from '../../store/user/actions';
+import {logOut} from "../../store/auth/actions"
 import NavigationService from '../../services/NavigationService';
 import {POSTS,AUTH} from "../../constants/routes"
+import {ICON_COLOR} from "../../constants/colors"
+
 
 class Account extends PureComponent {
   constructor(props) {
@@ -36,8 +39,6 @@ class Account extends PureComponent {
 
   logOut = () => {
     this.props.logOut();
-
-    NavigationService.navigate(AUTH);
   };
 
   handleClick = type => () => {
@@ -56,6 +57,10 @@ class Account extends PureComponent {
 
   clean = () => {
     this.setState({text: '', overlayVisible: false});
+  };
+
+  handleChangeText = text => {
+    this.setState({text});
   };
 
   static navigationOptions = {
@@ -83,14 +88,14 @@ class Account extends PureComponent {
             style={styles.textContainer}
             onPress={this.handleClick(values.TYPE_USERNAME)}>
             <Text style={styles.textInfo}>{`${i18n.t('LOGIN.USERNAME')}: ${this.props.user.username }`}</Text>
-            <Icon name="create" color='#a0a1a3'/>
+            <Icon name="create" color={ICON_COLOR}/>
           </Touchable>
           <Divider style={{ marginBottom : 10, marginTop : 10}} />
           <Touchable
             style={styles.textContainer}
             onPress={this.handleClick(values.TYPE_EMAIL)}>
             <Text style={styles.textInfo}>{`${i18n.t('LOGIN.EMAIL')}: ${this.props.user.email}`}</Text>
-            <Icon name="create" color='#a0a1a3' />
+            <Icon name="create" color={ICON_COLOR} />
           </Touchable>
           <Divider style={{ marginBottom : 10, marginTop : 10}} />
           <Touchable
@@ -102,14 +107,15 @@ class Account extends PureComponent {
             style={styles.textContainer}
             onPress={this.handleClick(values.TYPE_PASSWORD)}>
             <Text style={styles.textInfo}>{`${i18n.t('LOGIN.CHANGE_PASSWORD',)}`}</Text>
-            <Icon name="create" color='#a0a1a3' />
+            <Icon name="create" color={ICON_COLOR} />
           </Touchable>
           <Divider style={{ marginBottom : 10, marginTop : 10}} />
         </View>
         <Button title={i18n.t('LOGIN.LOG_OUT')} onPress={this.logOut} />
         <Alert
           isVisible={this.state.overlayVisible}
-          type = {this.state.type}
+          value={this.state.text}
+          onChangeText={this.handleChangeText}
           saveFunc={this.save}
           back={this.close}
         />
@@ -118,7 +124,7 @@ class Account extends PureComponent {
   }
 }
 const mapStateToProps = state => ({
-  user: state.users.user,
+  user: state.user.user,
 });
 
 const mapDispatchToProps = dispatch => ({

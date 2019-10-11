@@ -1,7 +1,9 @@
 import axios from 'axios';
 
-
 export  const api = axios.create({
-    baseURL: 'https://2e68987e.ngrok.io',
-    timeout: 1000
+    baseURL: 'https://303e6f26.ngrok.io',
+    timeout: 5000,
   });
+  export const authorizeApi = (token = null) => {
+    api.defaults.headers.common['Authorization'] = token;
+  };

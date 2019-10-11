@@ -4,21 +4,8 @@ import {View} from 'react-native';
 import {styles} from './styles';
 import {Button} from '../components';
 import i18n from '../localization';
-import {connect} from 'react-redux';
-
 
 export default class Alert extends React.Component {
-  constructor ( props) {
-    super(props)
-    this.state = {
-      text : ""
-    }
-  }
-
-  handleChangeText = text => {
-    this.setState({text});
-  };
-
   render() {
     const {isVisible,value,onChangeText,saveFunc,back} = this.props
     return (
@@ -26,7 +13,7 @@ export default class Alert extends React.Component {
         isVisible={isVisible}
         overlayStyle={styles.overlayContainer}>
         <View style={styles.overlayContainer}>
-          <Input value={this.state.text} onChangeText={this.handleChangeText} />
+          <Input value={value} onChangeText={onChangeText} />
           <View style={styles.overlayDirection}>
             <Button
               onPress={saveFunc}
@@ -44,17 +31,3 @@ export default class Alert extends React.Component {
     );
   }
 }
-const mapStateToProps = state => ({
-  user: state.users.user,
-});
-
-const mapDispatchToProps = dispatch => ({
-  logOut: () => dispatch(logOut()),
-  changeUserInfo: (text, userField) =>
-    dispatch(changeUserInfo(text, userField)),
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Account);

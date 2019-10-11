@@ -2,7 +2,6 @@ import i18n from 'i18n-js';
 import * as RNLocalize from 'react-native-localize';
 import en from './dictionaries/en.json';
 import ru from './dictionaries/ru.json';
-import {AsyncStorage} from 'react-native';
 
 i18n.translations = {en, ru};
 i18n.fallbacks = false;

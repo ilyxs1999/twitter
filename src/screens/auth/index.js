@@ -6,7 +6,7 @@ import {styles} from './styles';
 import {connect} from 'react-redux';
 import {LOGO} from '../../constants/img';
 import i18n from '../../localization';
-import {SIGN_IN,SIGN_UP,POSTS} from "../../constants/routes"
+import {LOGIN,REGISTER,POSTS} from "../../constants/routes"
 
 
 class Auth extends PureComponent {
@@ -15,7 +15,8 @@ class Auth extends PureComponent {
   };
 
   componentDidMount() {
-    if (this.props.loginIn) this.props.navigation.navigate(POSTS);
+    i18n.locale = this.props.language
+    if (this.props.isLogin) this.props.navigation.navigate(POSTS);
   }
 
   navigate = name => () => {
@@ -33,12 +34,12 @@ class Auth extends PureComponent {
         />
         <View>
           <Button
-            onPress={this.navigate(SIGN_IN)}
+            onPress={this.navigate(LOGIN)}
             style={styles.button}
             title={i18n.t('LOGIN.LOGIN')}
           />
           <Button
-            onPress={this.navigate(SIGN_UP)}
+            onPress={this.navigate(REGISTER)}
             style={styles.button}
             title={i18n.t('LOGIN.REGISTER')}
           />
@@ -48,7 +49,8 @@ class Auth extends PureComponent {
   }
 }
 const mapStateToProps = state => ({
-  loginIn: state.users.loginIn,
+  isLogin: state.auth.isLogin,
+  language : state.language.language
 });
 
 export default connect(mapStateToProps)(Auth);

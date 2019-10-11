@@ -5,5 +5,5 @@ export const RED = '#ff3738';
 export const GRAY = '#333';
 export const BLUE = 'steelblue';
 export const ACCENT = '#2cbdc7';
-
+export const ICON_COLOR = '#a0a1a3'
 export const TRANSPARENT = 'transparent';

@@ -1,8 +1,19 @@
-import {applyMiddleware, combineReducers, compose, createStore} from 'redux';
+import {applyMiddleware, combineReducers, createStore} from 'redux';
 import {AsyncStorage} from 'react-native';
 import {persistStore, persistReducer} from 'redux-persist';
-import rootReducer from './reducers';
 import thunk from 'redux-thunk';
+import posts from './posts';
+import language from './language';
+import user from './user';
+import auth from './auth';
+
+
+rootReducer = combineReducers({
+  user,
+  posts,
+  language,
+  auth,
+});
 
 const persistConfig = {
   key: 'root2',

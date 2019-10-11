@@ -29,6 +29,7 @@ export const styles = StyleSheet.create({
   },
   image: {
     height : 200,
+    width : 300,
     marginTop : 5,
     resizeMode : "contain",
     marginBottom : 5
@@ -82,5 +83,38 @@ export const styles = StyleSheet.create({
   },
   postText : {
     marginTop :5
-  }
+  },
+  tooltip : {
+    backgroundColor: 'white',
+    borderRadius: 5,
+    borderWidth: 1,
+  },
+  chooseButton: {
+    flex : 1,
+    height : 40
+  },
+  buttonGroup: {
+    height: 40,
+    flexDirection: 'row',
+    justifyContent : "space-between",
+    marginBottom : 5
+  },
+  input: {
+    height: 80,
+    justifyContent: 'flex-end',
+    padding: 10,
+  },
+  recorder : {
+    height: 40,
+    alignSelf :"center",
+  },
+  location : {
+    flex : 1,
+    height: 40,
+  },
+  sendButton: {
+    flex  : 5,
+    height: 40,
+  },
+  
 });
