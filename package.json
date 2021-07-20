@@ -19,7 +19,7 @@
     "moment": "2.24.0",
     "react": "16.8.6",
     "react-moment": "0.9.2",
-    "react-native": "0.60.5",
+    "react-native": "0.62.3",
     "react-native-audio-recorder-player": "2.4.2",
     "react-native-elements": "1.2.0",
     "react-native-gesture-handler": "1.4.1",
